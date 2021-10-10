@@ -2,6 +2,14 @@
 
 This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213).
 
+## Rubric point addressed
+* Compiling and Testing
+* Loops, Functions, I/O
+* Object Oriented Programming
+* Memory Management
+  *
+* Concurrency
+  *
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
