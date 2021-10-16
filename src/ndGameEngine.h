@@ -1,7 +1,7 @@
-#pragma once
+#ifndef ND_GAME_ENGINE_H_
+#define ND_GAME_ENGINE_H_
 
 #include <cstdint>
-#include <exception>  
 #include <vector>
 
 namespace nd
@@ -48,12 +48,6 @@ namespace nd
         CYAN(0, 255, 255), DARK_CYAN(0, 128, 128), VERY_DARK_CYAN(0, 64, 64),
         MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64);
         
-    class NdGameEngineException : public std::exception
-    {
-    public:
-        NdGameEngineException();
-    private:
-    };
 
     // 2D Sprite game character representation
     class Sprite
@@ -75,3 +69,5 @@ namespace nd
     };
 
 }
+
+#endif /* ND_GAME_ENGINE_H_ */
