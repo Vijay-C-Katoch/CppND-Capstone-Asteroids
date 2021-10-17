@@ -14,16 +14,21 @@
 #ifndef MEDIA_LIBRARY_H_
 #define MEDIA_LIBRARY_H_
 
+#include <utility>
+
 #include "mediaLibrarySDL.h"  // default media library
 
 
-template<typename InLibrary= MediaLibrarySDL>
+template<typename InLibrary=MediaLibrarySDL>
 class MediaLibrary
 {
 public:
 
     template<typename... Args>
-    void Draw(Args &&..args);
+    void Draw(Args &&...args)
+    {
+        InLibrary().Draw(std::forward<Args>(args) ...);
+    }
 };
 
 
