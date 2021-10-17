@@ -73,6 +73,23 @@ namespace nd
     using PixelException = ClassException<Pixel, RuntimeException>;
     using SpriteException = ClassException<Sprite, RuntimeException>;
 
+
+    // Keys
+    enum class Key
+    {
+        NONE,
+        UP, DOWN, LEFT, RIGHT,
+        SPACE, TAB, SHIFT, CTRL,
+        ESCAPE, RETURN, BACK
+    };
+
+    class NdGameEngine
+    {
+    public:
+        NdGameEngine();
+    private:
+    };
+
 }
 
 #endif /* ND_GAME_ENGINE_H_ */
