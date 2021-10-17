@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "ndException.h"
+
 namespace nd
 {
     namespace defaults 
@@ -17,7 +19,6 @@ namespace nd
     bool IsInBounds(const T& value, const T& low, const T& high) {
         return !(value < low) && !(high < value);
     }
-    
 
     // Represents a 32 bit RGBA color
     struct Pixel
@@ -67,6 +68,10 @@ namespace nd
         std::vector<Pixel> _pixels;
 
     };
+
+    // Game Engine Exceptions type
+    using PixelException = ClassException<Pixel, RuntimeException>;
+    using SpriteException = ClassException<Sprite, RuntimeException>;
 
 }
 

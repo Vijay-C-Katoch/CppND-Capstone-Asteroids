@@ -50,7 +50,7 @@ namespace nd
     template<typename T, typename E>
     class ClassException : public E
     {
-        static_assert(std::is_base_of_v<std::exception, T> == true, "nd::ClassException<T, E>: E must be derived from std::exception");
+        static_assert(std::is_base_of_v<std::exception, E> == true, "nd::ClassException<T, E>: E must be derived from std::exception");
     public:
         template<typename ...Args>
         ClassException(Args &&...args); // Template forward reference

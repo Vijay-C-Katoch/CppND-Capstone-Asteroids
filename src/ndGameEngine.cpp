@@ -39,7 +39,7 @@ void Sprite::SetPixel(int32_t x, int32_t y, Pixel p)
     }
     else
     {
-        // throw exception
+        throw SpriteException(__FILE__, __LINE__, __func__, "[Game Engine] : Pixel out of xy bound");
     }
 }
 
