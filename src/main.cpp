@@ -17,7 +17,10 @@ int main() {
     {
         AsteroidGame game;
         game.ConstructGame(300, 300);
-        game.Draw(600, 600);
+        game.DrawLine(10, 20, 50, 80, nd::RED);
+        game.DrawLine(40, 20, 40, 100, nd::GREEN);
+        game.DrawLine(20, 40, 80, 40, nd::YELLOW);
+        game.TestDrawFinal();
     }
     catch (const nd::GameEngineException& gameEngineException)
     {
@@ -31,11 +34,6 @@ int main() {
     {
         std::cout << "Caught Exception: {" << pixelException.what() << "}\n";
     }
-
-    //nd::Sprite gameCharacter;
-    //int32_t x = 0, y = 0;
-
-    //MediaLibrary<>().Draw(x, y, gameCharacter.GetDataPtr());
 
 
     return 0;

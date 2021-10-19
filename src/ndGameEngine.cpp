@@ -1,6 +1,7 @@
 
 #include "ndGameEngine.h"
 #include "mediaLibrary.h"
+#include "ndUtils.h"
 
 using namespace nd;
 
@@ -78,7 +79,6 @@ void NdGameEngine::SetDrawTarget(std::unique_ptr<Sprite> target) // caller loose
 
 void NdGameEngine::Draw(int32_t x, int32_t y, Pixel p)
 {
-    //MediaLibrary<>().Draw(x, y, _drawTarget->GetDataPtr());
 
     if (!_drawTarget)
     {
@@ -118,7 +118,70 @@ void NdGameEngine::Draw(int32_t x, int32_t y, Pixel p)
 
 }
 
-void NdGameEngine::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF)
-{
 
+void NdGameEngine::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p, uint32_t pattern)
+{
+    //Bresenham's line draw algorithm
+    const int32_t rise = y2 - y1;
+    const int32_t run = x2 - x1;
+        
+    if (0 == run) {         // vertical line x1 = x2
+        if (y2 < y1) {
+            std::swap(y2, y1);
+        }
+        for (int32_t y = y1; y <= y2; y++) {
+            Draw(x1, y, p);
+        }
+    }
+    else {
+        int32_t m = divCeil(rise,run);
+        int32_t adjust = m >= 0 ? 1 : -1;
+        int32_t offset = 0;
+        const int32_t abs_rise = std::abs(rise);
+        const int32_t abs_run = std::abs(run);
+
+        if (m >= -1 && m <= 1) { // run > rise, more horizontal, increment y
+            const int32_t delta = abs_rise * 2;
+            int32_t threshold = abs_run;
+            const int32_t thresholdInc = abs_run * 2;
+            int32_t y = y1;
+            if (x2 < x1) {
+                std::swap(x2, x1);
+                y = y2;
+            }
+            for (int32_t x = x1; x <= x2; x++) {
+                Draw(x, y, p);
+                offset += delta;
+                if (offset >= threshold) {
+                    y += adjust;
+                    threshold += thresholdInc;
+                }
+            }            
+        }
+        else { // rise > run, more vertical, increment x
+            const int32_t delta = abs_run * 2;
+            int32_t threshold = abs_rise;
+            const int32_t thresholdInc = abs_rise * 2;
+            int32_t x = x1;
+            if (y2 < y1) {
+                std::swap(y2, y1);
+                x = x2;
+            }
+            for (int32_t y = y1; y <= y2; y++) {
+                Draw(x, y, p);
+                offset += delta;
+                if (offset >= threshold) {
+                    x += adjust;
+                    threshold += thresholdInc;
+                }
+            }
+
+        }
+    }
 }
+
+void NdGameEngine::TestDrawFinal()
+{
+    MediaLibrary<>().Draw(300, 300, _drawTarget->GetDataPtr());
+}
+

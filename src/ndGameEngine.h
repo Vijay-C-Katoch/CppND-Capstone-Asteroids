@@ -14,12 +14,7 @@ namespace nd
         constexpr uint8_t   alpha = 0xFF; //opacity. 255 = opaque
         constexpr uint32_t  pixelValue = (alpha <<24);
     }
-
-    // utility functions
-    template<typename T>
-    bool IsInBounds(const T& value, const T& low, const T& high) {
-        return !(value < low) && !(high < value);
-    }
+   
 
     // Represents a 32 bit RGBA color
     struct Pixel
@@ -93,6 +88,8 @@ namespace nd
         // Drawing related functions
         void Draw(int32_t x, int32_t y, Pixel p = WHITE);
         void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF);
+        //ToDo: Temporary function to Test
+        void TestDrawFinal();
 
 
     private:

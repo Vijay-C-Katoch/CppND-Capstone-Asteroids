@@ -22,5 +22,11 @@ void MediaLibrarySDL::Draw(int32_t x, int32_t y, void* pixels)
 
     SDL_SetWindowTitle(window, "Hello World");
     SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);
+
+    //update screen
+    const uint32_t max = UINT32_MAX/20;
+    for(uint32_t i = 0; i < max; i++) {
+        if(i%10000 == 0)
+            SDL_RenderPresent(renderer);
+    }
 }
