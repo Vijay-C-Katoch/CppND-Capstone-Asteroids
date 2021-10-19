@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
 
 #include "ndException.h"
 
@@ -69,11 +70,6 @@ namespace nd
 
     };
 
-    // Game Engine Exceptions type
-    using PixelException = ClassException<Pixel, RuntimeException>;
-    using SpriteException = ClassException<Sprite, RuntimeException>;
-
-
     // Keys
     enum class Key
     {
@@ -86,9 +82,30 @@ namespace nd
     class NdGameEngine
     {
     public:
-        NdGameEngine();
+        NdGameEngine() = default;
+
+        void ConstructGame(
+            int32_t screen_w, int32_t screen_h, int32_t pixel_w = 1, 
+            int32_t pixel_h = 1, bool full_screen = false);
+
+        void SetDrawTarget(std::unique_ptr<Sprite> target);
+
+        // Drawing related functions
+        void Draw(int32_t x, int32_t y, Pixel p = WHITE);
+        void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF);
+
+
     private:
+        std::unique_ptr<Sprite> _drawTarget;
+        Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
+        float _pixelBlendFactor = 1.0f;
     };
+
+
+    // Game Engine Exceptions type
+    using PixelException = ClassException<Pixel, RuntimeException>;
+    using SpriteException = ClassException<Sprite, RuntimeException>;
+    using GameEngineException = ClassException<NdGameEngine, RuntimeException>;
 
 }
 
