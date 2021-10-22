@@ -104,6 +104,6 @@ namespace nd
     using SpriteException = ClassException<Sprite, RuntimeException>;
     using GameEngineException = ClassException<NdGameEngine, RuntimeException>;
 
-}
+} // namespace nd
 
 #endif /* ND_GAME_ENGINE_H_ */
