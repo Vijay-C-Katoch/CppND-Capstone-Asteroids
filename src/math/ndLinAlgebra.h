@@ -21,7 +21,11 @@ namespace nd
     template <class T>
     class ndVector
     {
+    public:
         ndVector() = default;
+
+        // no resources managed
+        // default copy and move constructor
 
         ndVector(std::size_t numDims);
 
@@ -50,9 +54,17 @@ namespace nd
         ndVector<T> operator+ (const ndVector<T>& rhs) const;
         ndVector<T> operator- (const ndVector<T>& rhs) const;
         ndVector<T> operator* (const ndVector<T>& rhs) const;
+        void operator+ (const ndVector<T>& rhs);
+        template <class T2> void operator* (const T2& scale);
+
+        // rotation. ToDo: implement and use Matrix
+        void rotate(const float& angle);
 
         // friend
+        // scaling
         template <class T2> friend ndVector<T2> operator* (const T2& lhs, const ndVector<T2>& rhs );
+        // rotation. ToDo: implement and use Matrix
+        template <class T2> friend ndVector<T2> rotate (const ndVector<T2>& v, const float& angle );
 
         //logical grouping
         // dot product, projection of one vector over other
@@ -147,7 +159,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator+ (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::plus<T>());
@@ -160,7 +172,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator- (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::minus<T>());
@@ -173,7 +185,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator* (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::multiplies<T>());
@@ -182,14 +194,54 @@ namespace nd
         return result;
     }
 
+    template <class T>
+    void ndVector<T>::operator+ (const ndVector<T>& rhs)
+    {
+        std::transform(_vector.begin(), _vector.end(), rhs._vector.begin(), _vector.begin(), std::plus<T>());
+    }
+
+    template <class T>
+    template <class T2> 
+    void ndVector<T>::operator* (const T2& scale)
+    {
+        std::transform(_vector.begin(), _vector.end(), _vector.begin(), std::bind(std::multiplies<T2>(), scale, std::placeholders::_1));
+    }
+
+    // rotation. ToDo: implement and use Matrix
+    template <class T>
+    void ndVector<T>::rotate(const float& angle)
+    {
+        if (_nDims != (std::size_t)2)
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
+
+        _vector[0] = (_vector[0] * std::cosf(angle)) - (_vector[1] * std::sinf(angle));
+        _vector[1] = (_vector[0] * std::sinf(angle)) + (_vector[1] * std::cosf(angle));
+    }
+
     // friend (with all types)
     template <class T>
     ndVector<T> operator* (const T& lhs, const ndVector<T>& rhs)
     {
         // scalar multiplication
         std::vector<T> resultVec(rhs._nDims, T());
-        std::transform(rhs._vector.begin(), rhs._vector.end(), resultVec.begin(), std::bind1st(std::multiplies<T>(), lhs));
+        std::transform(rhs._vector.begin(), rhs._vector.end(), resultVec.begin(), std::bind(std::multiplies<T>(), lhs, std::placeholders::_1));
 
+        ndVector<T> result(resultVec);
+        return result;
+    }
+
+    // ToDo: Temporary - Use Matrices later
+    template <class T>
+    ndVector<T> rotate(const ndVector<T>& v, const float& angle)
+    {
+        if (v._nDims != (std::size_t)2)
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
+
+        std::vector<T> resultVec(v._nDims, T());
+
+        resultVec.push_back((v._vector[0] * std::cosf(angle)) - (v._vector[1] * std::sinf(angle)));
+        resultVec.push_back((v._vector[0] * std::sinf(angle)) + (v._vector[1] * std::cosf(angle)));
+        
         ndVector<T> result(resultVec);
         return result;
     }
@@ -199,10 +251,10 @@ namespace nd
     T ndVector<T>::dot(const ndVector<T>& v1, const ndVector<T>& v2)
     {
         if (v1._nDims != v2._nDims)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         //dot product of two vectors
-        T dotProduct = std::inner_product(v1._vector.begin(), v1._vector.end(), v2._vector.begin(), T(0))
+        T dotProduct = std::inner_product(v1._vector.begin(), v1._vector.end(), v2._vector.begin(), T(0));
 
         return dotProduct;
     }
@@ -211,10 +263,10 @@ namespace nd
     ndVector<T> ndVector<T>::cross(const ndVector<T>& v1, const ndVector<T>& v2)
     {
         if (v1._nDims != v2._nDims)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
         
         if (v1._nDims != (std::size_t)3)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
 
         std::vector<T> resultVec(v1._nDims, T());
 
@@ -230,7 +282,7 @@ namespace nd
     ndVector<T> ndVector<T>::cross2D(const ndVector<T>& v)
     {
         if (v._nDims != (std::size_t)2)
-            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross2D cross-product only for 2d vectors");
+            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross2D cross-product only for 2d vectors");
 
         //cross product for 2D vector, return vector perpendicular to plane
         std::vector<T> resultVec{v._vector[1], -(v._vector[0])};

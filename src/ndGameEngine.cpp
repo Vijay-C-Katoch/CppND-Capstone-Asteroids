@@ -180,6 +180,47 @@ void NdGameEngine::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixe
     }
 }
 
+//template<class T>
+void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl, float s, float r)
+{
+
+    std::vector<ndVector<float>> vectorTransformed;
+
+    for (const auto& i : model)
+    {
+        vectorTransformed.emplace_back(i);
+    }
+
+    // Rotate
+    // ToDo: implement in Matrix
+    for (auto &ndVec: vectorTransformed)
+    {
+        ndVec.rotate(r);
+    }    
+
+    // Scale
+    for (auto& ndVec : vectorTransformed)
+    {
+        ndVec * s;
+    }
+
+    // Translate
+    for (auto& ndVec : vectorTransformed)
+    {
+        ndVec + trl;
+    }
+
+    // Draw Closed Polygon
+    std::size_t verts = model.size();
+    for (int i = 0; i < verts + 1; i++)
+    {
+        int j = (i + 1);
+        DrawLine(vectorTransformed[i % verts].GetAtIndex(0), vectorTransformed[i % verts].GetAtIndex(1),
+            vectorTransformed[j % verts].GetAtIndex(0), vectorTransformed[j % verts].GetAtIndex(1), nd::RED);
+    }
+
+}
+
 void NdGameEngine::TestDrawFinal()
 {
     MediaLibrary<>().Draw(300, 300, _drawTarget->GetDataPtr());

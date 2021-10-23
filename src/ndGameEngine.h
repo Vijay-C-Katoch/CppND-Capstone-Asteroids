@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "ndException.h"
+#include"math/ndLinAlgebra.h"
 
 namespace nd
 {
@@ -88,6 +89,9 @@ namespace nd
         // Drawing related functions
         void Draw(int32_t x, int32_t y, Pixel p = WHITE);
         void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF);
+       // template<class T>
+        void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl , float s = 1.0f, float r = 0.0f);
+
         //ToDo: Temporary function to Test
         void TestDrawFinal();
 
