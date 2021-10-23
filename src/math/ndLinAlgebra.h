@@ -59,6 +59,8 @@ namespace nd
         static T dot(const ndVector<T>& v1, const ndVector<T>& v2);
         //cross product, identify plane of vectors
         static ndVector<T> cross(const ndVector<T>& v1, const ndVector<T>& v2);
+        //cross product for 2D vector, return vector perpendicular to plane
+        static ndVector<T> cross2D(const ndVector<T>& v);
 
     private:
         std::vector<T> _vector;
@@ -114,7 +116,7 @@ namespace nd
     template <class T>
     T ndVector<T>::Norm()
     {
-        T sqrdSum = std::accumulate(_vector.begin(), _vector.end(), decltype(_vector)::value_type(0), [](const T& a, const T& b) 
+        T sqrdSum = std::accumulate(_vector.begin(), _vector.end(), T(0), [](const T& a, const T& b) 
         {
             return a + b * b;
         });
@@ -192,6 +194,49 @@ namespace nd
         return result;
     }
 
+    //static functions
+    template <class T>
+    T ndVector<T>::dot(const ndVector<T>& v1, const ndVector<T>& v2)
+    {
+        if (v1._nDims != v2._nDims)
+            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+
+        //dot product of two vectors
+        T dotProduct = std::inner_product(v1._vector.begin(), v1._vector.end(), v2._vector.begin(), T(0))
+
+        return dotProduct;
+    }
+
+    template <class T>
+    ndVector<T> ndVector<T>::cross(const ndVector<T>& v1, const ndVector<T>& v2)
+    {
+        if (v1._nDims != v2._nDims)
+            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+        
+        if (v1._nDims != (std::size_t)3)
+            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
+
+        std::vector<T> resultVec(v1._nDims, T());
+
+        resultVec.push_back((v1._vector[1] * v2._vector[2]) - (v1._vector[2] * v2._vector[1]));
+        resultVec.push_back((v1._vector[2] * v2._vector[0]) - (v1._vector[0] * v2._vector[2]));
+        resultVec.push_back((v1._vector[0] * v2._vector[1]) - (v1._vector[1] * v2._vector[0]));
+
+        ndVector<T> result(resultVec);
+        return result;
+    }
+
+    template <class T>
+    ndVector<T> ndVector<T>::cross2D(const ndVector<T>& v)
+    {
+        if (v._nDims != (std::size_t)2)
+            throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross2D cross-product only for 2d vectors");
+
+        //cross product for 2D vector, return vector perpendicular to plane
+        std::vector<T> resultVec{v._vector[1], -(v._vector[0])};
+        ndVector<T> result(resultVec);
+        return result;
+    }
 }
 
 #endif /* ND_LIN_ALGEBRA_H_ */
