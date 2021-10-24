@@ -96,6 +96,8 @@ namespace nd
         const T* it = inList.begin();
         const T* const end = inList.end();
 
+        _nDims = inList.size();
+
         for (; it != end; ++it)
             _vector.push_back(*it);
     }
@@ -159,7 +161,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator+ (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::plus<T>());
@@ -172,7 +174,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator- (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::minus<T>());
@@ -185,7 +187,7 @@ namespace nd
     ndVector<T> ndVector<T>::operator* (const ndVector<T>& rhs) const
     {
         if (_nDims != rhs._nDims)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         std::vector<T> resultVec(_nDims, T());
         std::transform(_vector.begin(), _vector.end(), rhs._vector.begin, resultVec.begin(), std::multiplies<T>());
@@ -212,7 +214,7 @@ namespace nd
     void ndVector<T>::rotate(const float& angle)
     {
         if (_nDims != (std::size_t)2)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
 
         _vector[0] = (_vector[0] * cosf(angle)) - (_vector[1] * sinf(angle));
         _vector[1] = (_vector[0] * sinf(angle)) + (_vector[1] * cosf(angle));
@@ -235,7 +237,7 @@ namespace nd
     ndVector<T> rotate(const ndVector<T>& v, const float& angle)
     {
         if (v._nDims != (std::size_t)2)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
 
         std::vector<T> resultVec(v._nDims, T());
 
@@ -251,7 +253,7 @@ namespace nd
     T ndVector<T>::dot(const ndVector<T>& v1, const ndVector<T>& v2)
     {
         if (v1._nDims != v2._nDims)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
 
         //dot product of two vectors
         T dotProduct = std::inner_product(v1._vector.begin(), v1._vector.end(), v2._vector.begin(), T(0));
@@ -263,10 +265,10 @@ namespace nd
     ndVector<T> ndVector<T>::cross(const ndVector<T>& v1, const ndVector<T>& v2)
     {
         if (v1._nDims != v2._nDims)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Dimensions mismatch");
         
         if (v1._nDims != (std::size_t)3)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
 
         std::vector<T> resultVec(v1._nDims, T());
 
@@ -282,7 +284,7 @@ namespace nd
     ndVector<T> ndVector<T>::cross2D(const ndVector<T>& v)
     {
         if (v._nDims != (std::size_t)2)
-            ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : cross2D cross-product only for 2d vectors");
+            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : cross2D cross-product only for 2d vectors");
 
         //cross product for 2D vector, return vector perpendicular to plane
         std::vector<T> resultVec{v._vector[1], -(v._vector[0])};
