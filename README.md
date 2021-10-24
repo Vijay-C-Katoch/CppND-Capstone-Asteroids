@@ -17,7 +17,7 @@ Prerequisites
 * Windows
   * Environment variable `SDL2DIR` is set to extracted SDL2 development libraries directory e.g.
     `SDL2DIR=C:\Users\Public\Downloads\SDL2-2.0.16` 
-  * Instructions: https://lazyfoo.net/tutorials/SDL/01_hello_SDL/windows/msvc2019/index.php
+    `Instructions: https://lazyfoo.net/tutorials/SDL/01_hello_SDL/windows/msvc2019/index.php`
 *Linux
 
 
