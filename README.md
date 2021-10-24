@@ -52,4 +52,7 @@ Linux
 rm -rf build && cmake -Bbuild && cmake --build build
 
 rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
+
+rm -rf build && cmake --trace -H./ -B./build > trace.txt 2>&1 && cmake --build ./build
+
 ```
