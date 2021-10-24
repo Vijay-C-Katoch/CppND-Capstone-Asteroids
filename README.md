@@ -13,7 +13,7 @@ This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree P
 
 Prerequisites
 --------------
-* CMake 3.19.0 or later
+* CMake 3.7 or later
 * Windows
   * Environment variable `SDL2DIR` is set to extracted SDL2 development libraries directory e.g.
     `SDL2DIR=C:\Users\Public\Downloads\SDL2-2.0.16` 
