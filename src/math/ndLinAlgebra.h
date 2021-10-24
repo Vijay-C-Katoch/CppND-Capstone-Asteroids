@@ -214,8 +214,8 @@ namespace nd
         if (_nDims != (std::size_t)2)
             ;//throw VectorException(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
 
-        _vector[0] = (_vector[0] * std::cosf(angle)) - (_vector[1] * std::sinf(angle));
-        _vector[1] = (_vector[0] * std::sinf(angle)) + (_vector[1] * std::cosf(angle));
+        _vector[0] = (_vector[0] * cosf(angle)) - (_vector[1] * sinf(angle));
+        _vector[1] = (_vector[0] * sinf(angle)) + (_vector[1] * cosf(angle));
     }
 
     // friend (with all types)
@@ -239,8 +239,8 @@ namespace nd
 
         std::vector<T> resultVec(v._nDims, T());
 
-        resultVec.push_back((v._vector[0] * std::cosf(angle)) - (v._vector[1] * std::sinf(angle)));
-        resultVec.push_back((v._vector[0] * std::sinf(angle)) + (v._vector[1] * std::cosf(angle)));
+        resultVec.push_back((v._vector[0] * cosf(angle)) - (v._vector[1] * sinf(angle)));
+        resultVec.push_back((v._vector[0] * sinf(angle)) + (v._vector[1] * cosf(angle)));
         
         ndVector<T> result(resultVec);
         return result;
