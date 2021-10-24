@@ -11,21 +11,48 @@ This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree P
 * Concurrency
   *
 
-## Dependencies for Running Locally
-* cmake >= 3.7
-  * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1 (Linux, Mac), 3.81 (Windows)
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
+Prerequisites
+--------------
+* CMake 3.19.0 or later
+
+ Windows
+ ---------
+ Environment variable `SDL2DIR` is set to extracted SDL2 development libraries directory e.g.
+ `SDL2DIR=C:\Users\Public\Downloads\SDL2-2.0.16` 
+  * Instructions: https://lazyfoo.net/tutorials/SDL/01_hello_SDL/windows/msvc2019/index.php
+  
+ Linux
+ ---------
+
 
 ## Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./HelloWorld`.
+4. Run it: `./AsteroidsGame`.
+
+## Build Instructions on platforms
+Windows
+--------------
+
+`cmake -G "Visual Studio 16 2019" -B.\build`
+`cmake --build .\build`
+
+* Build or build and install in single step
+```
+rmdir /q /s build & cmake -G "Visual Studio 16 2019" -B.\build & cmake --build .\build
+rmdir /q /s build & cmake -G "Visual Studio 16 2019" -B.\build && cmake --build .\build && cmake --install .\build --config Debug
+```
+* Log to trace
+```
+rmdir /q /s build & cmake -G "Visual Studio 16 2019" --trace -H.\ -B.\build > trace.txt 2>&1 && cmake --build .\build
+```
+
+Linux
+--------------
+```
+rm -rf build && cmake -Bbuild && cmake --build build
+
+rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
+```
