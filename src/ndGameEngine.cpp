@@ -1,6 +1,5 @@
 
 #include "ndGameEngine.h"
-#include "mediaLibrary.h"
 #include "ndUtils.h"
 
 using namespace nd;
@@ -63,6 +62,11 @@ void NdGameEngine::ConstructGame(
     }
 
     _drawTarget = std::make_unique<Sprite>(screen_w, screen_h);
+}
+
+void NdGameEngine::Run()
+{
+
 }
 
 void NdGameEngine::SetDrawTarget(std::unique_ptr<Sprite> target) // caller loose ownership
@@ -221,8 +225,13 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
 }
 
+void NdGameEngine::GameEngineThread()
+{
+
+}
+
 void NdGameEngine::TestDrawFinal()
 {
-    MediaLibrary<>().Draw(300, 300, _drawTarget->GetDataPtr());
+    _mediaLib.Draw(300, 300, _drawTarget->GetDataPtr());
 }
 

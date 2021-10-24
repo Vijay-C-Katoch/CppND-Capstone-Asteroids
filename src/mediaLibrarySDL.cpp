@@ -3,14 +3,26 @@
 #include "SDL.h"
 
 
+MediaLibrarySDL::MediaLibrarySDL()
+{
+    initFlags = SDL_INIT_VIDEO;
+}
+
+void MediaLibrarySDL::Init(bool controllerSupport)
+{
+
+}
+
+void MediaLibrarySDL::CreateWindow(bool fullScreen )
+{
+
+}
+
+
 void MediaLibrarySDL::Draw(int32_t x, int32_t y, void* pixels)
 {
     SDL_Surface* surf = 
         SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * sizeof(Uint32), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-
-    SDL_Window* window = NULL;
-    SDL_Surface* screenSurface = NULL;
-    SDL_Renderer* renderer = NULL;
 
 
     window = SDL_CreateWindow("Asteroid Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 300, SDL_WINDOW_SHOWN);

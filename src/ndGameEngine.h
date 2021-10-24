@@ -5,8 +5,10 @@
 #include <vector>
 #include <memory>
 
+#include "ndConfig.h"
 #include "ndException.h"
-#include"math/ndLinAlgebra.h"
+#include "math/ndLinAlgebra.h"
+#include "mediaLibrary.h"
 
 namespace nd
 {
@@ -84,12 +86,14 @@ namespace nd
             int32_t screen_w, int32_t screen_h, int32_t pixel_w = 1, 
             int32_t pixel_h = 1, bool full_screen = false);
 
+        void Run();
+
         void SetDrawTarget(std::unique_ptr<Sprite> target);
 
         // Drawing related functions
         void Draw(int32_t x, int32_t y, Pixel p = WHITE);
         void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF);
-       // template<class T>
+       //template<class T>
         void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl , float s = 1.0f, float r = 0.0f);
 
         //ToDo: Temporary function to Test
@@ -100,6 +104,10 @@ namespace nd
         std::unique_ptr<Sprite> _drawTarget;
         Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
         float _pixelBlendFactor = 1.0f;
+
+        MediaLib _mediaLib;
+
+        void GameEngineThread();
     };
 
 

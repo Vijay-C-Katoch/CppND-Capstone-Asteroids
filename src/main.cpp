@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "mediaLibrary.h"
 #include "ndGameEngine.h"
 
 class AsteroidGame : public nd::NdGameEngine
