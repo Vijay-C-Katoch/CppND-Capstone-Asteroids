@@ -20,6 +20,9 @@ Prerequisites
   * Instructions: https://lazyfoo.net/tutorials/SDL/01_hello_SDL/windows/msvc2019/index.php
   
 * Linux
+  * SDL2 >= 2.0
+  * All installation instructions can be found [here](https://wiki.libsdl.org/Installation)
+  >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. 
 
 
 ## Basic Build Instructions
