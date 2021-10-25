@@ -85,8 +85,13 @@ namespace nd
         void ConstructGame(
             std::int32_t screen_w, std::int32_t screen_h, std::int32_t pixel_w = 1, 
             std::int32_t pixel_h = 1, bool full_screen = false);
-
         void Run();
+
+        virtual void onClientCreate();
+
+        virtual void onClientUpdate(std::int32_t);
+
+        virtual void onClientDestroy();
 
         void SetDrawTarget(std::unique_ptr<Sprite> target);
 
@@ -96,8 +101,15 @@ namespace nd
        //template<class T>
         void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl , float s = 1.0f, float r = 0.0f);
 
-        //ToDo: Temporary function to Test
-        void TestDrawFinal();
+        std::uint32_t ScreenWidth() const
+        {
+            return _screenWidth;
+        }
+
+        std::uint32_t ScreenHeight() const
+        {
+            return _screenHeight;
+        }
 
 
     private:
@@ -110,6 +122,7 @@ namespace nd
         std::int32_t _windowHeight = 0;
         std::uint32_t	_pixelWidth = 4;
         std::uint32_t	_pixelHeight = 4;
+        bool _fullScreen;
 
         MediaLib _mediaLib;
 

@@ -1,4 +1,7 @@
 
+#include <thread>
+#include <chrono>
+
 #include "ndGameEngine.h"
 #include "ndUtils.h"
 
@@ -61,12 +64,35 @@ void NdGameEngine::ConstructGame(
         throw GameEngineException(__FILE__, __LINE__, __func__, "[Game Engine] : Invalid Game construct parameters");
     }
 
-    _drawTarget = std::make_unique<Sprite>(screen_w, screen_h);
+    _screenWidth = screen_w;
+    _screenHeight = screen_h;
+    _pixelWidth = pixel_w;
+    _pixelHeight = pixel_h;
+    _fullScreen = full_screen;
+
+    _drawTarget = std::make_unique<Sprite>(_screenWidth, _screenHeight);
 }
 
 void NdGameEngine::Run()
 {
+    std::thread t{ &NdGameEngine::GameEngineThread, this };
 
+    t.join();
+}
+
+void NdGameEngine::onClientCreate()
+{
+    return;
+}
+
+void NdGameEngine::onClientUpdate(std::int32_t)
+{
+    return;
+}
+
+void NdGameEngine::onClientDestroy()
+{
+    return;
 }
 
 void NdGameEngine::SetDrawTarget(std::unique_ptr<Sprite> target) // caller loose ownership
@@ -227,13 +253,39 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
 void NdGameEngine::GameEngineThread()
 {
-    _mediaLib.CreateWindow();
+    _mediaLib.CreateWindow(_screenWidth, _screenHeight, _pixelWidth, _pixelHeight, _fullScreen);
 
+    onClientCreate();
 
-}
+    auto timepoint1 = std::chrono::system_clock::now();
+    auto timepoint2 = std::chrono::system_clock::now();
 
-void NdGameEngine::TestDrawFinal()
-{
-    _mediaLib.Draw(300, 300, _drawTarget->GetDataPtr());
+    int32_t cycleDuration = 3;
+    int32_t iterations = 0;
+
+    while (1)
+    {
+        // sleep at every iteration to reduce CPU usage
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        timepoint2 = std::chrono::system_clock::now();
+        int32_t timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint2 - timepoint1).count();
+        
+        if (timeSinceLastUpdate >= cycleDuration)
+        {
+
+            onClientUpdate(timeSinceLastUpdate);
+
+            _mediaLib.Draw(300, 300, _drawTarget->GetDataPtr());
+
+            timepoint1 = timepoint2;
+
+            // Dummy to exit after 3 seconds
+            iterations++;
+            if (1000 < iterations)
+                break;
+        }
+    }
+
 }
 

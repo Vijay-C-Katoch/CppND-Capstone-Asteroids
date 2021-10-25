@@ -35,8 +35,11 @@ void MediaLibrarySDL::CreateWindow(
         _windowFlags |= SDL_WINDOW_FULLSCREEN;
     }
 
-    int32_t windowWidth = screenWidth * pixelWidth;
-    int32_t windowHeight = screenHeight * pixelHeight;
+    _screenWidth = screenWidth;
+    _screenHeight = screenHeight;
+
+    int32_t windowWidth = _screenWidth * pixelWidth;
+    int32_t windowHeight = _screenHeight * pixelHeight;
 
     if (SDL_Init(_initFlags) < 0)
     {
@@ -61,24 +64,11 @@ void MediaLibrarySDL::CreateWindow(
 
 void MediaLibrarySDL::Draw(int32_t x, int32_t y, void* pixels)
 {
-    SDL_Surface* surf = 
-        SDL_CreateRGBSurfaceFrom(pixels, x, y, 32, x * sizeof(Uint32), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 
-
-    _window = SDL_CreateWindow("Asteroid Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 300, SDL_WINDOW_SHOWN);
-
-    _screenSurface = SDL_GetWindowSurface(_window);
-    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
-
+    SDL_Surface* surf = SDL_CreateRGBSurfaceFrom(pixels, _screenWidth, _screenHeight, 32, _screenWidth * sizeof(Uint32), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surf);
-
-    SDL_SetWindowTitle(_window, "Hello World");
     SDL_RenderCopy(_renderer, texture, NULL, NULL);
+    SDL_RenderPresent(_renderer);
+    SDL_DestroyTexture(texture);
 
-    //update screen
-    const uint32_t max = UINT32_MAX/20;
-    for(uint32_t i = 0; i < max; i++) {
-        if(i%10000 == 0)
-            SDL_RenderPresent(_renderer);
-    }
 }

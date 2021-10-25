@@ -42,6 +42,8 @@ private:
     std::uint32_t _windowFlags;
     std::uint32_t _rendererFlags;
     std::uint32_t _initFlags;
+    std::uint32_t _screenWidth;
+    std::uint32_t _screenHeight;
     bool _fullScreen = false;
 
 };
