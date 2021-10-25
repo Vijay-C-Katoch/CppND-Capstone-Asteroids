@@ -14,8 +14,8 @@ namespace nd
 {
     namespace defaults 
     {
-        constexpr uint8_t   alpha = 0xFF; //opacity. 255 = opaque
-        constexpr uint32_t  pixelValue = (alpha <<24);
+        constexpr std::uint8_t   alpha = 0xFF; //opacity. 255 = opaque
+        constexpr std::uint32_t  pixelValue = (alpha <<24);
     }
    
 
@@ -24,16 +24,16 @@ namespace nd
     {
         union
         {
-            uint32_t data = defaults::pixelValue;
-            struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };
+            std::uint32_t data = defaults::pixelValue;
+            struct { std::uint8_t r; std::uint8_t g; std::uint8_t b; std::uint8_t a; };
         };
 
         // Transparency mode
         enum class Tmode { NORMAL, ALPHA, MASK, CUSTOM };
 
         Pixel() = default;
-        Pixel(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = defaults::alpha);
-        Pixel(uint32_t p);
+        Pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = defaults::alpha);
+        Pixel(std::uint32_t p);
     };
 
     // useful Pixel constants
@@ -54,16 +54,16 @@ namespace nd
     {
     public:
         Sprite() = default;
-        Sprite(int32_t w, int32_t h);
+        Sprite(std::int32_t w, std::int32_t h);
         ~Sprite();
 
-        Pixel GetPixel(int32_t x, int32_t y)const;
-        void SetPixel(int32_t x, int32_t y, Pixel p);
+        Pixel GetPixel(std::int32_t x, std::int32_t y)const;
+        void SetPixel(std::int32_t x, std::int32_t y, Pixel p);
         Pixel* GetDataPtr();
 
     private:
-        int32_t _width = 0;
-        int32_t _height = 0;
+        std::int32_t _width = 0;
+        std::int32_t _height = 0;
         std::vector<Pixel> _pixels;
 
     };
@@ -83,16 +83,16 @@ namespace nd
         NdGameEngine() = default;
 
         void ConstructGame(
-            int32_t screen_w, int32_t screen_h, int32_t pixel_w = 1, 
-            int32_t pixel_h = 1, bool full_screen = false);
+            std::int32_t screen_w, std::int32_t screen_h, std::int32_t pixel_w = 1, 
+            std::int32_t pixel_h = 1, bool full_screen = false);
 
         void Run();
 
         void SetDrawTarget(std::unique_ptr<Sprite> target);
 
         // Drawing related functions
-        void Draw(int32_t x, int32_t y, Pixel p = WHITE);
-        void DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixel p = WHITE, uint32_t pattern = 0xFFFFFFFF);
+        void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
+        void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
        //template<class T>
         void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl , float s = 1.0f, float r = 0.0f);
 
@@ -104,6 +104,12 @@ namespace nd
         std::unique_ptr<Sprite> _drawTarget;
         Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
         float _pixelBlendFactor = 1.0f;
+        std::uint32_t	_screenWidth = 256;
+        std::uint32_t	_screenHeight = 240;
+        std::int32_t _windowWidth = 0;
+        std::int32_t _windowHeight = 0;
+        std::uint32_t	_pixelWidth = 4;
+        std::uint32_t	_pixelHeight = 4;
 
         MediaLib _mediaLib;
 

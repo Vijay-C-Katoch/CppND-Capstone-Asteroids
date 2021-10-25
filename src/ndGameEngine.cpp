@@ -227,6 +227,8 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
 void NdGameEngine::GameEngineThread()
 {
+    _mediaLib.CreateWindow();
+
 
 }
 
