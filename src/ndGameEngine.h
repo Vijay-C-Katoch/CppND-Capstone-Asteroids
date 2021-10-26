@@ -1,3 +1,21 @@
+/*
+* NdGameEngine
+* 
+* A very simple game engine which is derivation
+* of olcPixelGameEngine developed by OneLoneCoder.com
+* 
+* Source Location: 
+* https://github.com/Vijay-C-Katoch/CppND-Capstone-Asteroids
+* 
+* olcPixelGameEngine source location:
+* https://github.com/OneLoneCoder/olcPixelGameEngine
+* 
+* License : 
+* https://github.com/Vijay-C-Katoch/CppND-Capstone-Asteroids/blob/main/LICENSE.md  
+* 
+*/
+
+
 #ifndef ND_GAME_ENGINE_H_
 #define ND_GAME_ENGINE_H_
 
