@@ -1,4 +1,5 @@
 
+#include <cstddef>
 #include <thread>
 #include <chrono>
 
@@ -297,7 +298,7 @@ void NdGameEngine::GameEngineThread()
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
         timepoint2 = std::chrono::system_clock::now();
-        int32_t timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint2 - timepoint1).count();
+        int32_t timeSinceLastUpdate = (int32_t)std::chrono::duration_cast<std::chrono::milliseconds>(timepoint2 - timepoint1).count();
         
         if (timeSinceLastUpdate >= cycleDuration)
         {
