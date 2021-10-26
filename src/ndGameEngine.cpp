@@ -6,6 +6,10 @@
 #include "ndUtils.h"
 
 using namespace nd;
+using std::uint8_t;
+using std::int32_t;
+using std::uint32_t;
+using std::size_t;
 
 Pixel::Pixel(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) 
 {
@@ -232,19 +236,11 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 {
 
     std::vector<ndVector<float>> vectorTransformed;
-
-    for (const auto& i : model)
-    {
-        vectorTransformed.emplace_back(i);
-    }
+    size_t verts = model.size();
+    vectorTransformed.resize(verts);
 
     // Rotate
     // ToDo: implement in Matrix
-    //for (auto &ndVec: vectorTransformed)
-    //{
-    //    ndVec.rotate(r);
-    //}    
-
     for (size_t i = 0; i < model.size(); i++)
     {
         vectorTransformed[i] = rotate(model[i], r);
@@ -263,7 +259,6 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
     }
 
     // Draw Closed Polygon
-    std::size_t verts = model.size();
     for (int i = 0; i < verts + 1; i++)
     {
         int j = (i + 1);

@@ -57,9 +57,6 @@ namespace nd
         void operator+ (const ndVector<T>& rhs);
         template <class T2> void operator* (const T2& scale);
 
-        // rotation. ToDo: implement and use Matrix
-        void rotate(const float& angle);
-
         // friend
         // scaling
         template <class T2> friend ndVector<T2> operator* (const T2& lhs, const ndVector<T2>& rhs );
@@ -209,17 +206,6 @@ namespace nd
         std::transform(_vector.begin(), _vector.end(), _vector.begin(), std::bind(std::multiplies<T2>(), scale, std::placeholders::_1));
     }
 
-    // rotation. ToDo: implement and use Matrix
-    template <class T>
-    void ndVector<T>::rotate(const float& angle)
-    {
-        if (_nDims != (std::size_t)2)
-            throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
-
-        _vector[0] = (_vector[0] * cosf(angle)) - (_vector[1] * sinf(angle));
-        _vector[1] = (_vector[0] * sinf(angle)) + (_vector[1] * cosf(angle));
-    }
-
     // friend (with all types)
     template <class T>
     ndVector<T> operator* (const T& lhs, const ndVector<T>& rhs)
@@ -232,7 +218,7 @@ namespace nd
         return result;
     }
 
-    // ToDo: Temporary - Use Matrices later
+    // rotation. ToDo: implement and use Matrix
     template <class T>
     ndVector<T> rotate(const ndVector<T>& v, const float& angle)
     {
