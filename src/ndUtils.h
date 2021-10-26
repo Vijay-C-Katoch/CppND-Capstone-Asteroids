@@ -13,7 +13,12 @@ bool IsInBounds(const T& value, const T& low, const T& high) {
 inline int32_t divCeil(int32_t numerator, int32_t denominator)
 {
     std::div_t res = std::div(numerator, denominator);
-    return res.quot + !!res.rem;
+
+    int32_t s = 1;
+    if (res.quot < 0 || (res.quot == 0 && denominator < 0))
+        s = -1;
+
+    return res.quot + (s * (int)(!!res.rem));
 }
 
 #endif /* ND_UTILS_H_ */

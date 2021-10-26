@@ -13,7 +13,8 @@ protected:
 
     void onClientCreate() override
     {
-       _vecModelShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
+       //_vecModelShip = { { 0.0f, -5.0f}, {-2.5f, +2.5f}, {+2.5f, +2.5f} };
+        _vecModelShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
 
     }
 
@@ -22,12 +23,19 @@ protected:
         ClearScreen(nd::BLANK);
 
         // Just draw some lines to test
+        /*DrawLine(1, 2, 5, 8, nd::RED);
+        DrawLine(4, 2, 4, 10, nd::GREEN);
+        DrawLine(2, 4, 8, 4, nd::YELLOW);*/
+
         DrawLine(10, 20, 50, 80, nd::RED);
         DrawLine(40, 20, 40, 100, nd::GREEN);
         DrawLine(20, 40, 80, 40, nd::YELLOW);
 
+        //nd::ndVector<float> translate{ 10.0f, 10.0f };
         nd::ndVector<float> translate{ 100.0f, 100.0f };
-        DrawWireFrame(_vecModelShip, translate, 1.0, 0.0);    
+
+
+        DrawWireFrame(_vecModelShip, translate, 0.7854);    // rotate 45 deg or radian 0.7854
 
     }
 
@@ -44,6 +52,8 @@ int main() {
     try
     {
         AsteroidGame game;
+        
+        //game.ConstructGame(160, 100, 8, 8);
         game.ConstructGame(640, 480, 1, 1);
 
         // main run thread

@@ -114,7 +114,7 @@ namespace nd
         void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
         void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
        //template<class T>
-        void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl , float s = 1.0f, float r = 0.0f);
+        void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl, float r = 0.0f, float s = 1.0f);
 
         std::uint32_t ScreenWidth() const
         {
