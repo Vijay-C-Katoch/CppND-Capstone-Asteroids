@@ -107,6 +107,23 @@ void NdGameEngine::SetDrawTarget(std::unique_ptr<Sprite> target) // caller loose
     }
 }
 
+int32_t NdGameEngine::GetDrawTargetWidth()
+{
+    if (_drawTarget)
+        return _drawTarget->Width();
+    else
+        return 0;
+}
+
+int32_t NdGameEngine::GetDrawTargetHeight()
+{
+    if (_drawTarget)
+        return _drawTarget->Height();
+    else
+        return 0;
+}
+
+
 void NdGameEngine::Draw(int32_t x, int32_t y, Pixel p)
 {
 
@@ -223,10 +240,15 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
     // Rotate
     // ToDo: implement in Matrix
-    for (auto &ndVec: vectorTransformed)
+    //for (auto &ndVec: vectorTransformed)
+    //{
+    //    ndVec.rotate(r);
+    //}    
+
+    for (size_t i = 0; i < model.size(); i++)
     {
-        ndVec.rotate(r);
-    }    
+        vectorTransformed[i] = rotate(model[i], r);
+    }
 
     // Scale
     for (auto& ndVec : vectorTransformed)
@@ -251,6 +273,17 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
 }
 
+void NdGameEngine::ClearScreen(Pixel p)
+{
+    int32_t numPixels = GetDrawTargetWidth() * GetDrawTargetHeight();
+    Pixel* pixels = _drawTarget->GetDataPtr();
+
+    for (int32_t i = 0; i < numPixels; i++)
+    {
+        pixels[i] = p;
+    }
+}
+
 void NdGameEngine::GameEngineThread()
 {
     _mediaLib.CreateWindow(_screenWidth, _screenHeight, _pixelWidth, _pixelHeight, _fullScreen);
@@ -260,7 +293,7 @@ void NdGameEngine::GameEngineThread()
     auto timepoint1 = std::chrono::system_clock::now();
     auto timepoint2 = std::chrono::system_clock::now();
 
-    int32_t cycleDuration = 3;
+    int32_t cycleDuration = 2;
     int32_t iterations = 0;
 
     while (1)
@@ -276,11 +309,11 @@ void NdGameEngine::GameEngineThread()
 
             onClientUpdate(timeSinceLastUpdate);
 
-            _mediaLib.Draw(300, 300, _drawTarget->GetDataPtr());
+            _mediaLib.Draw(_screenWidth, _screenHeight, _drawTarget->GetDataPtr());
 
             timepoint1 = timepoint2;
 
-            // Dummy to exit after 3 seconds
+            // Dummy to exit after 2 seconds
             iterations++;
             if (1000 < iterations)
                 break;

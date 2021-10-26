@@ -30,7 +30,7 @@ public:
         std::uint32_t pixelHeight = 4,
         bool fullScreen = false);
 
-    void Draw(int32_t x, int32_t y, void* pixels);
+    void Draw(int32_t width, int32_t height, void* pixels);
 
 private:
     SDL_Window* _window = NULL;
@@ -42,8 +42,6 @@ private:
     std::uint32_t _windowFlags;
     std::uint32_t _rendererFlags;
     std::uint32_t _initFlags;
-    std::uint32_t _screenWidth;
-    std::uint32_t _screenHeight;
     bool _fullScreen = false;
 
 };

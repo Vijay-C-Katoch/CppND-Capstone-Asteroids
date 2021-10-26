@@ -19,8 +19,16 @@ protected:
 
     void onClientUpdate(std::int32_t) override
     {
+        ClearScreen(nd::BLANK);
+
+        // Just draw some lines to test
+        DrawLine(10, 20, 50, 80, nd::RED);
+        DrawLine(40, 20, 40, 100, nd::GREEN);
+        DrawLine(20, 40, 80, 40, nd::YELLOW);
+
         nd::ndVector<float> translate{ 100.0f, 100.0f };
-        DrawWireFrame(_vecModelShip, translate);
+        DrawWireFrame(_vecModelShip, translate, 1.0, 0.0);    
+
     }
 
 private:
@@ -36,12 +44,7 @@ int main() {
     try
     {
         AsteroidGame game;
-        game.ConstructGame(640, 480, 2, 2);
-
-        // Just draw some lines to test
-        game.DrawLine(10, 20, 50, 80, nd::RED);
-        game.DrawLine(40, 20, 40, 100, nd::GREEN);
-        game.DrawLine(20, 40, 80, 40, nd::YELLOW);
+        game.ConstructGame(640, 480, 1, 1);
 
         // main run thread
         game.Run();
@@ -60,7 +63,14 @@ int main() {
     {
         std::cout << "Caught Exception: {" << pixelException.what() << "}\n";
     }
-
+    catch (const nd::VectorException<float>& vectorException)
+    {
+        std::cout << "Caught Exception: {" << vectorException.what() << "}\n";
+    }
+    catch (const MediaLibSDLException& mediaLibException)
+    {
+        std::cout << "Caught Exception: {" << mediaLibException.what() << "}\n";
+    }
 
     return 0;
 }

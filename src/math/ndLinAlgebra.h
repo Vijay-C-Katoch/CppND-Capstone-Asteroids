@@ -239,7 +239,7 @@ namespace nd
         if (v._nDims != (std::size_t)2)
             throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : Rotation only for 2d vectors");
 
-        std::vector<T> resultVec(v._nDims, T());
+        std::vector<T> resultVec;
 
         resultVec.push_back((v._vector[0] * cosf(angle)) - (v._vector[1] * sinf(angle)));
         resultVec.push_back((v._vector[0] * sinf(angle)) + (v._vector[1] * cosf(angle)));
@@ -270,7 +270,7 @@ namespace nd
         if (v1._nDims != (std::size_t)3)
             throw VectorException<T>(__FILE__, __LINE__, __func__, "[Vector] : cross-product only 3d vectors");
 
-        std::vector<T> resultVec(v1._nDims, T());
+        std::vector<T> resultVec;
 
         resultVec.push_back((v1._vector[1] * v2._vector[2]) - (v1._vector[2] * v2._vector[1]));
         resultVec.push_back((v1._vector[2] * v2._vector[0]) - (v1._vector[0] * v2._vector[2]));

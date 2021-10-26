@@ -35,11 +35,9 @@ void MediaLibrarySDL::CreateWindow(
         _windowFlags |= SDL_WINDOW_FULLSCREEN;
     }
 
-    _screenWidth = screenWidth;
-    _screenHeight = screenHeight;
 
-    int32_t windowWidth = _screenWidth * pixelWidth;
-    int32_t windowHeight = _screenHeight * pixelHeight;
+    int32_t windowWidth = screenWidth * pixelWidth;
+    int32_t windowHeight = screenHeight * pixelHeight;
 
     if (SDL_Init(_initFlags) < 0)
     {
@@ -62,10 +60,10 @@ void MediaLibrarySDL::CreateWindow(
 }
 
 
-void MediaLibrarySDL::Draw(int32_t x, int32_t y, void* pixels)
+void MediaLibrarySDL::Draw(int32_t width, int32_t height, void* pixels)
 {
 
-    SDL_Surface* surf = SDL_CreateRGBSurfaceFrom(pixels, _screenWidth, _screenHeight, 32, _screenWidth * sizeof(Uint32), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+    SDL_Surface* surf = SDL_CreateRGBSurfaceFrom(pixels, width, height, 32, width * sizeof(Uint32), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surf);
     SDL_RenderCopy(_renderer, texture, NULL, NULL);
     SDL_RenderPresent(_renderer);

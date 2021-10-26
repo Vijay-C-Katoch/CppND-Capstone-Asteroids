@@ -61,6 +61,17 @@ namespace nd
         void SetPixel(std::int32_t x, std::int32_t y, Pixel p);
         Pixel* GetDataPtr();
 
+        std::int32_t Width()
+        {
+            return _width;
+        }
+
+        std::int32_t Height()
+        {
+            return _height;
+        }
+
+
     private:
         std::int32_t _width = 0;
         std::int32_t _height = 0;
@@ -95,6 +106,10 @@ namespace nd
 
         void SetDrawTarget(std::unique_ptr<Sprite> target);
 
+        std::int32_t GetDrawTargetWidth();
+
+        std::int32_t GetDrawTargetHeight();
+
         // Drawing related functions
         void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
         void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
@@ -110,7 +125,9 @@ namespace nd
         {
             return _screenHeight;
         }
-
+    
+        // Clears Screen by changing draw target to given Pixel
+        void ClearScreen(Pixel p);
 
     private:
         std::unique_ptr<Sprite> _drawTarget;
