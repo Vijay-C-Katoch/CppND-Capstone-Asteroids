@@ -106,6 +106,14 @@ namespace nd
         ESCAPE, RETURN, BACK
     };
 
+    // nd::ButtonState - Hardware button (keypad/mouse/joystick) state 
+    struct ButtonState
+    {
+        bool bPressed = false;
+        bool bReleased = false;
+        bool bHeld = false;
+    };
+
     class NdGameEngine
     {
     public:
@@ -121,7 +129,11 @@ namespace nd
 
         virtual void onClientUpdate(std::int32_t);
 
-        virtual void onClientDestroy();        
+        virtual void onClientDestroy();  
+
+    public: // Hardware Interfaces
+        // Get the state of a specific keyboard button
+        ButtonState GetKey(Key k) const;
 
     public: // Utility
         std::int32_t GetDrawTargetWidth();
@@ -160,6 +172,12 @@ namespace nd
         bool _fullScreen;
 
         MediaLib _mediaLib;
+
+        // Keyboard keys state
+        ButtonState _keyState[256] {};    // value initialize all
+        bool _keyStateNew[256]{};
+        bool _keyStateOld[256]{};
+        
 
         void GameEngineThread();
     };
