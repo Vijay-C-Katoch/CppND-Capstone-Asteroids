@@ -159,6 +159,12 @@ namespace nd
         // Clears Screen by changing draw target to given Pixel
         void ClearScreen(Pixel p);
 
+    public:
+        // Update functions
+        void EngineCoreUpdate();
+        void UpdateKeyState(int32_t key, bool state);
+
+
     private:
         std::unique_ptr<Sprite> _drawTarget;
         Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;

@@ -280,6 +280,13 @@ void NdGameEngine::ClearScreen(Pixel p)
     }
 }
 
+void NdGameEngine::EngineCoreUpdate()
+{
+
+}
+
+
+
 void NdGameEngine::GameEngineThread()
 {
     _mediaLib.CreateWindow(_screenWidth, _screenHeight, _pixelWidth, _pixelHeight, _fullScreen);

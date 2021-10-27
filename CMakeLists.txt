@@ -17,13 +17,13 @@ endif()
 
 find_package(SDL2 REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS} src src/math)
+include_directories(${SDL2_INCLUDE_DIRS} src/nd src/nd/math)
 
 add_executable(
   ${PROJECT_NAME} 
-  src/main.cpp 
-  src/mediaLibrarySDL.cpp 
-  src/ndGameEngine.cpp 
+  src/asteroids.cpp 
+  src/nd/mediaLibrarySDL.cpp 
+  src/nd/ndGameEngine.cpp 
   )
 
 string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
