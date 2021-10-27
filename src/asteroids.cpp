@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "ndGameEngine.h"
+#include "nd/ndGameEngine.h"
 
 using std::vector;
 
