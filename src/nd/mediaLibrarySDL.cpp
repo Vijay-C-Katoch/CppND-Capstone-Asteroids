@@ -17,6 +17,8 @@ MediaLibrarySDL::MediaLibrarySDL()
     _initFlags = SDL_INIT_VIDEO;
 
     _sdlKeys.resize(Key::ORDINAL);
+
+    MapSDLKeys();
 }
 
 void MediaLibrarySDL::Init(bool controllerSupport)

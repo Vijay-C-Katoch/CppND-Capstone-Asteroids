@@ -12,7 +12,7 @@ void KeyUPPress()
 
 void KeyDownPress()
 {
-  std::cout << "Key Up Pressed\n";
+  std::cout << "Key Down Pressed\n";
 }
 
 class AsteroidGame : public nd::NdGameEngine
