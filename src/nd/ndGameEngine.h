@@ -26,6 +26,7 @@
 #include "ndConfig.h"
 #include "ndException.h"
 #include "math/ndLinAlgebra.h"
+#include "hw/keyboardController.h"
 #include "mediaLibrary.h"
 
 namespace nd
@@ -97,23 +98,6 @@ namespace nd
 
     };
 
-    // Keys
-    enum class Key
-    {
-        NONE,
-        UP, DOWN, LEFT, RIGHT,
-        SPACE, TAB, SHIFT, CTRL,
-        ESCAPE, RETURN, BACK
-    };
-
-    // nd::ButtonState - Hardware button (keypad/mouse/joystick) state 
-    struct ButtonState
-    {
-        bool bPressed = false;
-        bool bReleased = false;
-        bool bHeld = false;
-    };
-
     class NdGameEngine
     {
     public:
@@ -131,9 +115,16 @@ namespace nd
 
         virtual void onClientDestroy();  
 
-    public: // Hardware Interfaces
-        // Get the state of a specific keyboard button
-        ButtonState GetKey(Key k) const;
+    public: // Hardware Connect
+
+      void ConnectKeyPressCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+      {
+        _mediaLib.ConnectKeyPressCb(key, func);
+      }
+      void ConnectKeyReleaseCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+      {
+        _mediaLib.ConnectKeyReleaseCb(key, func);
+      }
 
     public: // Utility
         std::int32_t GetDrawTargetWidth();
@@ -178,12 +169,6 @@ namespace nd
         bool _fullScreen;
 
         MediaLib _mediaLib;
-
-        // Keyboard keys state
-        ButtonState _keyState[256] {};    // value initialize all
-        bool _keyStateNew[256]{};
-        bool _keyStateOld[256]{};
-        
 
         void GameEngineThread();
     };

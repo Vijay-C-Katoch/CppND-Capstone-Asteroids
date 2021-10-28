@@ -282,7 +282,7 @@ void NdGameEngine::ClearScreen(Pixel p)
 
 void NdGameEngine::EngineCoreUpdate()
 {
-
+  _mediaLib.PollEvent();
 }
 
 
@@ -310,17 +310,19 @@ void NdGameEngine::GameEngineThread()
         if (timeSinceLastUpdate >= cycleDuration)
         {
 
-            onClientUpdate(timeSinceLastUpdate);
+          EngineCoreUpdate();
 
-            _mediaLib.Draw(_screenWidth, _screenHeight, _drawTarget->GetDataPtr());
+          onClientUpdate(timeSinceLastUpdate);
 
-            timepoint1 = timepoint2;
+          _mediaLib.Draw(_screenWidth, _screenHeight, _drawTarget->GetDataPtr());
 
-            // Dummy to exit after 2 seconds
-            iterations++;
-            if (1000 < iterations)
-                break;
-        }
+          timepoint1 = timepoint2;
+
+          // Dummy to exit after 2 seconds
+          iterations++;
+          if (1000 < iterations)
+              break;
+      }
     }
 
 }

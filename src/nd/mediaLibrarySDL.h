@@ -11,9 +11,12 @@
 #define MEDIA_LIBRARY_SDL_H_
 
 #include <cstdint>
-#include <ndException.h>
+#include <vector>
 #include <SDL.h>
 #undef main     // unresolved external symbol _SDL_main
+
+#include "ndException.h"
+#include "hw/keyboardController.h"
 
 class MediaLibrarySDL
 {
@@ -32,6 +35,12 @@ public:
 
     void Draw(int32_t width, int32_t height, void* pixels);
 
+    void ConnectKeyPressCb(const nd::Key& key, const nd::KeyControllerContext::KeyFunc_t& func);
+
+    void ConnectKeyReleaseCb(const nd::Key& key, const nd::KeyControllerContext::KeyFunc_t& func);
+
+    void PollEvent();
+
 private:
     SDL_Window* _window = NULL;
     SDL_Surface* _screenSurface = NULL;
@@ -43,6 +52,16 @@ private:
     std::uint32_t _rendererFlags;
     std::uint32_t _initFlags;
     bool _fullScreen = false;
+
+    nd::KeyController _keycontroller;
+
+    // SDL KeyMap
+    std::vector<SDL_Scancode> _sdlKeys;
+
+    // handle input and events
+    SDL_Event _sdlEvent;
+
+    void MapSDLKeys();
 
 };
 

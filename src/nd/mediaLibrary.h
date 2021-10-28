@@ -41,6 +41,24 @@ public:
         _media.Draw(std::forward<Args>(args) ...);
     }
 
+    template<typename... Args>
+    void ConnectKeyPressCb(Args &&...args)
+    {
+      _media.ConnectKeyPressCb(std::forward<Args>(args) ...);
+    }
+
+    template<typename... Args>
+    void ConnectKeyReleaseCb(Args &&...args)
+    {
+      _media.ConnectKeyReleaseCb(std::forward<Args>(args) ...);
+    }
+
+    template<typename... Args>
+    void PollEvent(Args &&...args)
+    {
+      _media.PollEvent(std::forward<Args>(args) ...);
+    }
+
 private:
     InLibrary _media;
 };

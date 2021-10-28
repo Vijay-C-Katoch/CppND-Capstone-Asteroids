@@ -4,6 +4,17 @@
 
 using std::vector;
 
+
+void KeyUPPress()
+{
+  std::cout << "Key Up Pressed\n";
+}
+
+void KeyDownPress()
+{
+  std::cout << "Key Up Pressed\n";
+}
+
 class AsteroidGame : public nd::NdGameEngine
 {
 public:
@@ -16,6 +27,8 @@ protected:
        //_vecModelShip = { { 0.0f, -5.0f}, {-2.5f, +2.5f}, {+2.5f, +2.5f} };
         _vecModelShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
 
+        ConnectKeyPressCb(nd::Key::UP, std::bind(KeyUPPress));
+        ConnectKeyPressCb(nd::Key::DOWN, std::bind(KeyDownPress));
     }
 
     void onClientUpdate(std::int32_t) override

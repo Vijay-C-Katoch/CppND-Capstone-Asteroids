@@ -5,6 +5,8 @@
 using std::uint32_t;
 using std::int32_t;
 
+using namespace nd;
+
 MediaLibrarySDL::MediaLibrarySDL()
 {
 
@@ -13,6 +15,8 @@ MediaLibrarySDL::MediaLibrarySDL()
     _windowFlags = SDL_WINDOW_SHOWN;
     _rendererFlags = SDL_RENDERER_ACCELERATED;
     _initFlags = SDL_INIT_VIDEO;
+
+    _sdlKeys.resize(Key::ORDINAL);
 }
 
 void MediaLibrarySDL::Init(bool controllerSupport)
@@ -70,3 +74,80 @@ void MediaLibrarySDL::Draw(int32_t width, int32_t height, void* pixels)
     SDL_DestroyTexture(texture);
 
 }
+
+void MediaLibrarySDL::ConnectKeyPressCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+{
+  _keycontroller.ConnectKeyPress(
+    static_cast<ScanCode_t>(_sdlKeys[key]), 
+    func
+  );
+}
+
+void MediaLibrarySDL::ConnectKeyReleaseCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+{
+  _keycontroller.ConnectKeyRelease(
+    static_cast<ScanCode_t>(_sdlKeys[key]),
+    func
+  );
+}
+
+void MediaLibrarySDL::PollEvent()
+{
+#if 0
+  bool running = true;
+  while (running)
+  {
+    while (SDL_PollEvent(&_sdlEvent) > 0)
+    {
+#endif
+      if(SDL_PollEvent(&_sdlEvent) > 0)
+      {
+        switch (_sdlEvent.type)
+        {
+        case SDL_KEYDOWN:
+        {
+          _keycontroller.OnKeyPress(_sdlEvent.key.keysym.scancode);
+          break;
+        }
+
+        case SDL_KEYUP:
+        {
+          _keycontroller.OnKeyRelease(_sdlEvent.key.keysym.scancode);
+          break;
+        }
+
+        case SDL_QUIT:
+        {
+          //running = false;
+          break;
+        }
+        }
+      }
+
+#if 0
+    }
+  }
+#endif
+
+}
+
+
+void MediaLibrarySDL::MapSDLKeys()
+{
+  _sdlKeys[Key::UP] = SDL_SCANCODE_UP;
+  _sdlKeys[Key::DOWN] = SDL_SCANCODE_DOWN;
+  _sdlKeys[Key::LEFT] = SDL_SCANCODE_LEFT;
+  _sdlKeys[Key::RIGHT] = SDL_SCANCODE_RIGHT;
+  _sdlKeys[Key::SPACE] = SDL_SCANCODE_KP_SPACE;
+  _sdlKeys[Key::TAB] = SDL_SCANCODE_KP_TAB;
+  _sdlKeys[Key::LSHIFT] = SDL_SCANCODE_LSHIFT;
+  _sdlKeys[Key::RSHIFT] = SDL_SCANCODE_RSHIFT;
+  _sdlKeys[Key::LCTRL] = SDL_SCANCODE_LCTRL;
+  _sdlKeys[Key::RCTRL] = SDL_SCANCODE_RCTRL;
+  _sdlKeys[Key::ESCAPE] = SDL_SCANCODE_ESCAPE;
+  _sdlKeys[Key::RETURN] = SDL_SCANCODE_RETURN;
+  _sdlKeys[Key::BACKSPACE] = SDL_SCANCODE_BACKSPACE;
+
+}
+
+
