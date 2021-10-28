@@ -17,7 +17,7 @@ endif()
 
 find_package(SDL2 REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS} src/nd src/nd/math)
+include_directories(${SDL2_INCLUDE_DIRS} src/nd src/nd/math src/nd/hw)
 
 add_executable(
   ${PROJECT_NAME} 
