@@ -1,8 +1,5 @@
 #include <iostream>
-
 #include "asteroids.h"
-
-
 
 int main() {
 
@@ -11,13 +8,10 @@ int main() {
     try
     {
         AsteroidGame game;
-        
-        //game.ConstructGame(160, 100, 8, 8);
-        game.ConstructGame(640, 480, 1, 1);
 
+        game.ConstructGame(640, 480, 1, 1);
         // main run thread
         game.Run();
-
 
     }
     catch (const nd::GameEngineException& gameEngineException)
