@@ -233,7 +233,7 @@ void NdGameEngine::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixe
 }
 
 //template<class T>
-void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trl, float r, float s)
+void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r, float s)
 {
 
     std::vector<ndVector<float>> vectorTransformed;
@@ -256,7 +256,7 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
     // Translate
     for (auto& ndVec : vectorTransformed)
     {
-        ndVec + trl;
+        ndVec + trlVec;
     }
 
     // Draw Closed Polygon
