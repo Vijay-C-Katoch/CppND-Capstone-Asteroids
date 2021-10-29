@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include <chrono>
 
 #include "ndConfig.h"
 #include "ndException.h"
@@ -31,153 +32,171 @@
 
 namespace nd
 {
-    namespace defaults 
-    {
-        constexpr std::uint8_t   alpha = 0xFF; //opacity. 255 = opaque
-        constexpr std::uint32_t  pixelValue = (alpha <<24);
-    }
+  namespace defaults 
+  {
+    constexpr std::uint8_t   alpha = 0xFF; //opacity. 255 = opaque
+    constexpr std::uint32_t  pixelValue = (alpha <<24);
+  }
    
 
-    // Represents a 32 bit RGBA color
-    struct Pixel
+  // Represents a 32 bit RGBA color
+  struct Pixel
+  {
+    union
     {
-        union
-        {
-            std::uint32_t data = defaults::pixelValue;
-            struct { std::uint8_t r; std::uint8_t g; std::uint8_t b; std::uint8_t a; };
-        };
-
-        // Transparency mode
-        enum class Tmode { NORMAL, ALPHA, MASK, CUSTOM };
-
-        Pixel() = default;
-        Pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = defaults::alpha);
-        Pixel(std::uint32_t p);
+      std::uint32_t data = defaults::pixelValue;
+      struct { std::uint8_t r; std::uint8_t g; std::uint8_t b; std::uint8_t a; };
     };
 
-    // useful Pixel constants
-    static const Pixel
-        WHITE(255, 255, 255),
-        BLACK(0, 0, 0), BLANK(0, 0, 0, 0),
-        RED(255, 0, 0), DARK_RED(128, 0, 0), VERY_DARK_RED(64, 0, 0),
-        GREEN(0, 255, 0), DARK_GREEN(0, 128, 0), VERY_DARK_GREEN(0, 64, 0),
-        BLUE(0, 0, 255), DARK_BLUE(0, 0, 128), VERY_DARK_BLUE(0, 0, 64),
-        GREY(192, 192, 192), DARK_GREY(128, 128, 128), VERY_DARK_GREY(64, 64, 64),
-        YELLOW(255, 255, 0), DARK_YELLOW(128, 128, 0), VERY_DARK_YELLOW(64, 64, 0),
-        CYAN(0, 255, 255), DARK_CYAN(0, 128, 128), VERY_DARK_CYAN(0, 64, 64),
-        MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64);
+    // Transparency mode
+    enum class Tmode { NORMAL, ALPHA, MASK, CUSTOM };
+
+    Pixel() = default;
+    Pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = defaults::alpha);
+    Pixel(std::uint32_t p);
+  };
+
+  // useful Pixel constants
+  static const Pixel
+    WHITE(255, 255, 255),
+    BLACK(0, 0, 0), BLANK(0, 0, 0, 0),
+    RED(255, 0, 0), DARK_RED(128, 0, 0), VERY_DARK_RED(64, 0, 0),
+    GREEN(0, 255, 0), DARK_GREEN(0, 128, 0), VERY_DARK_GREEN(0, 64, 0),
+    BLUE(0, 0, 255), DARK_BLUE(0, 0, 128), VERY_DARK_BLUE(0, 0, 64),
+    GREY(192, 192, 192), DARK_GREY(128, 128, 128), VERY_DARK_GREY(64, 64, 64),
+    YELLOW(255, 255, 0), DARK_YELLOW(128, 128, 0), VERY_DARK_YELLOW(64, 64, 0),
+    CYAN(0, 255, 255), DARK_CYAN(0, 128, 128), VERY_DARK_CYAN(0, 64, 64),
+    MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64);
         
 
-    // 2D Sprite game character representation
-    class Sprite
+  // 2D Sprite game character representation
+  class Sprite
+  {
+  public:
+    Sprite() = default;
+    Sprite(std::int32_t w, std::int32_t h);
+    ~Sprite();
+
+    Pixel GetPixel(std::int32_t x, std::int32_t y)const;
+    void SetPixel(std::int32_t x, std::int32_t y, Pixel p);
+    Pixel* GetDataPtr();
+
+    std::int32_t Width()
     {
-    public:
-        Sprite() = default;
-        Sprite(std::int32_t w, std::int32_t h);
-        ~Sprite();
+      return _width;
+    }
 
-        Pixel GetPixel(std::int32_t x, std::int32_t y)const;
-        void SetPixel(std::int32_t x, std::int32_t y, Pixel p);
-        Pixel* GetDataPtr();
-
-        std::int32_t Width()
-        {
-            return _width;
-        }
-
-        std::int32_t Height()
-        {
-            return _height;
-        }
-
-
-    private:
-        std::int32_t _width = 0;
-        std::int32_t _height = 0;
-        std::vector<Pixel> _pixels;
-
-    };
-
-    class NdGameEngine
+    std::int32_t Height()
     {
-    public:
-        NdGameEngine() = default;
+      return _height;
+    }
 
-        void ConstructGame(
-            std::int32_t screen_w, std::int32_t screen_h, std::int32_t pixel_w = 1, 
-            std::int32_t pixel_h = 1, bool full_screen = false);
-        void Run();
 
-    public: // Override interfaces for client
-        virtual void onClientCreate();
+  private:
+    std::int32_t _width = 0;
+    std::int32_t _height = 0;
+    std::vector<Pixel> _pixels;
 
-        virtual void onClientUpdate(std::int32_t);
+  };
 
-        virtual void onClientDestroy();  
+  class NdGameEngine
+  {
+  public:
+    NdGameEngine() = default;
 
-    public: // Hardware Connect
+    void ConstructGame(
+      std::int32_t screen_w, std::int32_t screen_h, std::int32_t pixel_w = 1, 
+      std::int32_t pixel_h = 1, bool full_screen = false
+    );
+    void Run();
 
-      void ConnectKeyPressCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+  public: // Override interfaces for client
+    virtual void onClientCreate();
+
+    virtual void onClientUpdate(float elapsedTicks);
+
+    virtual void onClientDestroy();  
+
+  public: // Hardware Connect
+
+    void ConnectKeyPressCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+    {
+      _mediaLib.ConnectKeyPressCb(key, func);
+    }
+    void ConnectKeyReleaseCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+    {
+      _mediaLib.ConnectKeyReleaseCb(key, func);
+    }
+
+  public: // Utility
+      std::int32_t GetDrawTargetWidth();
+
+      std::int32_t GetDrawTargetHeight();
+
+      std::uint32_t ScreenWidth() const
       {
-        _mediaLib.ConnectKeyPressCb(key, func);
+        return _screenWidth;
       }
-      void ConnectKeyReleaseCb(const Key& key, const KeyControllerContext::KeyFunc_t& func)
+
+      std::uint32_t ScreenHeight() const
       {
-        _mediaLib.ConnectKeyReleaseCb(key, func);
+        return _screenHeight;
       }
 
-    public: // Utility
-        std::int32_t GetDrawTargetWidth();
+      float WrapX(float x)
+      {
+        return (std::fmod((x + _screenWidth), _screenWidth));
+      }
 
-        std::int32_t GetDrawTargetHeight();
+      float WrapY(float y)
+      {
+        return (std::fmod((y + _screenHeight), _screenHeight));
+      }
 
-        std::uint32_t ScreenWidth() const
-        {
-            return _screenWidth;
-        }
-
-        std::uint32_t ScreenHeight() const
-        {
-            return _screenHeight;
-        }
-
-    public: // Draw methods
-        void SetDrawTarget(std::unique_ptr<Sprite> target);
-        void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
-        void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
-        void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f);
+  public: // Draw methods
+      void SetDrawTarget(std::unique_ptr<Sprite> target);
+      void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
+      void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
+      void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f);
     
-        // Clears Screen by changing draw target to given Pixel
-        void ClearScreen(Pixel p);
+      // Clears Screen by changing draw target to given Pixel
+      void ClearScreen(Pixel p);
 
-    public:
-        // Update functions
-        void EngineCoreUpdate();
-        void UpdateKeyState(int32_t key, bool state);
-
-
-    private:
-        std::unique_ptr<Sprite> _drawTarget;
-        Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
-        float _pixelBlendFactor = 1.0f;
-        std::uint32_t	_screenWidth = 256;
-        std::uint32_t	_screenHeight = 240;
-        std::int32_t _windowWidth = 0;
-        std::int32_t _windowHeight = 0;
-        std::uint32_t	_pixelWidth = 4;
-        std::uint32_t	_pixelHeight = 4;
-        bool _fullScreen;
-
-        MediaLib _mediaLib;
-
-        void GameEngineThread();
-    };
+  public:
+      // Engine thread management
+      void EngineInit();
+      void EngineCoreUpdate();       
 
 
-    // Game Engine Exceptions type
-    using PixelException = ClassException<Pixel, RuntimeException>;
-    using SpriteException = ClassException<Sprite, RuntimeException>;
-    using GameEngineException = ClassException<NdGameEngine, RuntimeException>;
+  private:
+      std::unique_ptr<Sprite> _drawTarget;
+      Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
+      float _pixelBlendFactor = 1.0f;
+      std::uint32_t	_screenWidth = 256;
+      std::uint32_t	_screenHeight = 240;
+      std::int32_t _windowWidth = 0;
+      std::int32_t _windowHeight = 0;
+      std::uint32_t	_pixelWidth = 4;
+      std::uint32_t	_pixelHeight = 4;
+      bool _fullScreen;
+
+      // time
+      std::chrono::time_point<std::chrono::system_clock> _tp1, _tp2;
+      float _elapsedTicks;
+
+      MediaLib _mediaLib;
+
+      void GameEngineThread();
+  };
+
+  // Game Engine Exceptions type
+  using PixelException = ClassException<Pixel, RuntimeException>;
+  using SpriteException = ClassException<Sprite, RuntimeException>;
+  using GameEngineException = ClassException<NdGameEngine, RuntimeException>;
+
+  // Concurrency
+  extern std::atomic<bool> g_isEngineRunning;
+
 
 } // namespace nd
 
