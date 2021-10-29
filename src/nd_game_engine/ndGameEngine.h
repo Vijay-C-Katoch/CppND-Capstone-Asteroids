@@ -145,17 +145,17 @@ namespace nd
 
       float WrapX(float x)
       {
-        return (std::fmod((x + _screenWidth), _screenWidth));
+        return std::fabsf((std::fmod((x + _screenWidth), _screenWidth)));
       }
 
       float WrapY(float y)
       {
-        return (std::fmod((y + _screenHeight), _screenHeight));
+        return std::fabsf((std::fmod((y + _screenHeight), _screenHeight)));
       }
 
   public: // Draw methods
       void SetDrawTarget(std::unique_ptr<Sprite> target);
-      void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
+      virtual void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
       void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
       void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f);
     

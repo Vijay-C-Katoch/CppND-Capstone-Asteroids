@@ -8,6 +8,13 @@ class AsteroidGame : public nd::NdGameEngine
 public:
   AsteroidGame() = default;
 
+  void Draw(std::int32_t x, std::int32_t y, nd::Pixel p) override
+  {
+    x = WrapX(x);
+    y = WrapY(y);
+    nd::NdGameEngine::Draw(x, y, p);
+  }
+
 protected:
 
   void onClientCreate() override
@@ -27,7 +34,7 @@ protected:
 
   void onClientUpdate(float elapsedTicks) override
   {
-    ClearScreen(nd::BLANK);
+    ClearScreen(nd::BLACK);
 
     // A translation vector
     nd::ndVector<float> translateVec{ 100.0f, 100.0f };
@@ -35,19 +42,15 @@ protected:
     //update and draw asteroids
     for (auto& a : _vecAsteroids)
     {
-      // newPosition = velosity*time + old position;
+      /// newPosition = velosity*time + old position;
       a.x += a.dx * elapsedTicks;  
       a.y += a.dy * elapsedTicks;  
-
-      //a.x = WrapX(a.x);
-      //a.y = WrapY(a.y);
 
       // Draw as rectangle
       for (int x = 0; x < a.size; x++)
         for (int y = 0; y < a.size; y++)
         {
-          //Draw(a.x + x, a.y + y, nd::RED);
-          Draw(WrapX(a.x + x), WrapY(a.y + y), nd::RED);
+          Draw(a.x + x, a.y + y, nd::RED);
         }                    
     }
 

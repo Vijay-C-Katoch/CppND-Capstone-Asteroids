@@ -274,8 +274,8 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
 void NdGameEngine::ClearScreen(Pixel p)
 {
-  int32_t numPixels = GetDrawTargetWidth() * GetDrawTargetHeight();
-  Pixel* pixels = _drawTarget->GetDataPtr();
+  const int32_t numPixels = _screenWidth * _screenHeight;
+  Pixel* const pixels = _drawTarget->GetDataPtr();
 
   for (int32_t i = 0; i < numPixels; i++)
   {
