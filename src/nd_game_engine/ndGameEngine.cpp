@@ -245,7 +245,7 @@ void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, cons
 
   // Rotate
   // ToDo: implement in Matrix
-  for (size_t i = 0; i < model.size(); i++)
+  for (size_t i = 0; i < verts; i++)
   {
     vectorTransformed[i] = rotate(model[i], r);
   }

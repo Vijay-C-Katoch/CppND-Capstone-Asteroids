@@ -36,6 +36,7 @@ protected:
 
 
     ConnectKeyPressCb(nd::Key::UP, std::bind(&AsteroidGame::OnUpKeyPress, this));
+    ConnectKeyPressCb(nd::Key::DOWN, std::bind(&AsteroidGame::OnDownKeyPress, this));
     // steer the space ship
     ConnectKeyPressCb(nd::Key::LEFT, [&]() { _playerCtrl.angle -= 5.0f * ElapsedTicks();});
     ConnectKeyPressCb(nd::Key::RIGHT, [&](){ _playerCtrl.angle += 5.0f * ElapsedTicks();});
@@ -62,10 +63,10 @@ protected:
 
     // Player control change ship position wrt velocity
     // Formula: newPosition = velosity*time + old position;
-    _playerCtrl.x += _playerCtrl.dx * elapsedTicks;
-    _playerCtrl.y += _playerCtrl.dy * elapsedTicks;
+    _playerCtrl.x += _playerCtrl.dx * elapsedTicks * 50.0f;
+    _playerCtrl.y += _playerCtrl.dy * elapsedTicks * 50.0f;
 
-    _translateVec = { {_playerCtrl.x, _playerCtrl.y} };
+    _translateVec = { {_playerCtrl.x , _playerCtrl.y} };
    
 
     DrawWireFrame(_vecSpaceShip, _translateVec, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
@@ -78,6 +79,13 @@ public:   //Hardware connect
     // Formula: newVelocity = Acceleration*time + old velocity;
     _playerCtrl.dx += sin(_playerCtrl.angle) * ElapsedTicks() * 20.0f;
     _playerCtrl.dy += -cos(_playerCtrl.angle) * ElapsedTicks() * 20.0f;
+  }
+
+  void OnDownKeyPress()
+  {
+    // Reduce thurst. opposite of UP
+    _playerCtrl.dx -= sin(_playerCtrl.angle) * ElapsedTicks() * 20.0f;
+    _playerCtrl.dy -= -cos(_playerCtrl.angle) * ElapsedTicks() * 20.0f;
   }
 
 
