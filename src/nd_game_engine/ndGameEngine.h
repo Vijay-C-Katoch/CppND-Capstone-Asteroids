@@ -153,6 +153,11 @@ namespace nd
         return std::fabsf((std::fmod((y + _screenHeight), _screenHeight)));
       }
 
+      float ElapsedTicks() const
+      {
+        return _elapsedTicks;
+      }
+
   public: // Draw methods
       void SetDrawTarget(std::unique_ptr<Sprite> target);
       virtual void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
