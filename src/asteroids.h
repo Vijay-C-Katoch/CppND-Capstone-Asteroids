@@ -21,20 +21,31 @@ protected:
 
   void onClientCreate() override
   {
-    // space-ship is a triangle shape made up of vectors
-    _vecSpaceShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
-    // asteroids
-    _vecAsteroids.push_back({200.0f, 200.0f, 80.0f, -60.0f, (int)160, 0.0f });
+    // Model space-ship as Triangle made up of 2D vectors
+    _vecModelShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
+    
     // player control of spaceShip. Initialize for spaceship to be at centre
     _playerCtrl.x = ScreenWidth() / 2.0f;
     _playerCtrl.y = ScreenHeight() / 2.0f;
     _playerCtrl.dx = 0.0f;
     _playerCtrl.dy = 0.0f;
-    _playerCtrl.angle = 0.0f;
+    _playerCtrl.angle = 0.0f;     
+    _translateVecSpShip = { {1.0f, 1.0f} };
 
-    _translateVec = { {100.0f, 100.0f} };
 
+    // Model Asteroids as Polygon made up of 2D vectors
+    int verts = 20;
+    for (int i = 0; i < verts; i++)
+    {
+      float radius = 50.0f;
+      float a = ((float)i / (float)verts) * 6.28318f;
+      _vecModelAsteroids.push_back({ { radius * sinf(a), radius * cosf(a)} });
+    }
 
+    // asteroids control as space objects is  random
+    _asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)160, 0.0f });
+
+    // Connect keyboard keys to functions
     ConnectKeyPressCb(nd::Key::UP, std::bind(&AsteroidGame::OnUpKeyPress, this));
     ConnectKeyPressCb(nd::Key::DOWN, std::bind(&AsteroidGame::OnDownKeyPress, this));
     // steer the space ship
@@ -47,18 +58,15 @@ protected:
     ClearScreen(nd::BLACK);
     
     //update and draw asteroids
-    for (auto& a : _vecAsteroids)
+    for (auto& a : _asteroidsCtrl)
     {
       // Formula: newPosition = velosity*time + old position;
       a.x += a.dx * elapsedTicks;  
       a.y += a.dy * elapsedTicks;  
 
-      // Draw as rectangle
-      for (int x = 0; x < a.size; x++)
-        for (int y = 0; y < a.size; y++)
-        {
-          Draw(a.x + x, a.y + y, nd::RED);
-        }                    
+      _translateVecAsteroid = { {WrapX(a.x) , WrapY(a.y)} };
+
+      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle);                   
     }
 
     // Player control change ship position wrt velocity
@@ -66,10 +74,9 @@ protected:
     _playerCtrl.x += _playerCtrl.dx * elapsedTicks * 50.0f;
     _playerCtrl.y += _playerCtrl.dy * elapsedTicks * 50.0f;
 
-    _translateVec = { {_playerCtrl.x , _playerCtrl.y} };
-   
+    _translateVecSpShip = { {WrapX(_playerCtrl.x) , WrapY(_playerCtrl.y)} };
 
-    DrawWireFrame(_vecSpaceShip, _translateVec, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
+    DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
   }
 
 public:   //Hardware connect
@@ -101,14 +108,19 @@ private:
     float angle;  // angle in radians
   };
 
-  // space-ship is made up of 2D vectors
-  std::vector<nd::ndVector<float>> _vecSpaceShip;
-  // asteroids are made up of space objects
-  std::vector<spaceObject> _vecAsteroids;
-  // player control of spaceShip
+  // Model space-ship as Triangle made up of 2D vectors
+  std::vector<nd::ndVector<float>> _vecModelShip;
+  // Model Asteroids as Polygon made up of 2D vectors
+  std::vector<nd::ndVector<float>> _vecModelAsteroids;
+
+  // player control of space-ship as space object
   spaceObject _playerCtrl;
-  // A translation vector
-  nd::ndVector<float> _translateVec;
+  // asteroids control as space objects
+  std::vector<spaceObject> _asteroidsCtrl;
+  
+  // Translation vectors 
+  nd::ndVector<float> _translateVecSpShip;
+  nd::ndVector<float> _translateVecAsteroid;
 
 };
 
