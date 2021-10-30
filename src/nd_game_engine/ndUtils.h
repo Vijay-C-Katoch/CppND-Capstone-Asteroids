@@ -7,7 +7,7 @@
 // utility functions
 template<typename T>
 bool IsInBounds(const T& value, const T& low, const T& high) {
-    return !(value < low) && !(high < value);
+    return !(value < low) && !(high <= value);
 }
 
 inline int32_t divCeil(int32_t numerator, int32_t denominator)

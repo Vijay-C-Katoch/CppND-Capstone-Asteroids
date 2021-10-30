@@ -10,6 +10,7 @@ int main() {
         AsteroidGame game;
 
         game.ConstructGame(640, 480, 1, 1);
+        //game.ConstructGame(160, 100, 8, 8);
         // main run thread
         game.Run();
 
