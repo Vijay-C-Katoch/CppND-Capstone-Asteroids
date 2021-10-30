@@ -59,6 +59,12 @@ public:
       _media.PollEvent(std::forward<Args>(args) ...);
     }
 
+    template<typename... Args>
+    void ConnectQuitCb(Args &&...args)
+    {
+      _media.ConnectQuitCb(std::forward<Args>(args) ...);
+    }
+
 private:
     InLibrary _media;
 };

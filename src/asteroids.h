@@ -1,6 +1,7 @@
 #ifndef ASTEROIDS_H_
 #define ASTEROIDS_H_
 
+#include <cstdlib>
 #include "ndGameEngine.h"
 
 class AsteroidGame : public nd::NdGameEngine
@@ -39,7 +40,7 @@ protected:
     for (int i = 0; i < verts; i++)
     {
       float radius = 1.0f;
-      float a = ((float)i / (float)verts) * 6.28318f;
+      float a = ((float)i / (float)verts) * nd::defaults::radian2Pi;
       _vecModelAsteroids.push_back({ { radius * sinf(a), radius * cosf(a)} });
     }
 
@@ -68,22 +69,61 @@ protected:
     {
       // Formula: newPosition = velosity*time + old position;
       a.x += a.dx * elapsedTicks;  
-      a.y += a.dy * elapsedTicks;  
+      a.y += a.dy * elapsedTicks; 
+      a.x = WrapX(a.x);
+      a.y = WrapY(a.y);
 
-      _translateVecAsteroid = { {WrapX(a.x) , WrapY(a.y)} };
+      _translateVecAsteroid = { {a.x , a.y} };
 
-      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle, a.size);                   
+      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle, a.size);
     }
 
     // Player control change ship position wrt velocity
     // Formula: newPosition = velosity*time + old position;
     _playerCtrl.x += _playerCtrl.dx * elapsedTicks * 50.0f;
     _playerCtrl.y += _playerCtrl.dy * elapsedTicks * 50.0f;
+    _playerCtrl.x = WrapX(_playerCtrl.x);
+    _playerCtrl.y = WrapY(_playerCtrl.y);
 
-    _translateVecSpShip = { {WrapX(_playerCtrl.x) , WrapY(_playerCtrl.y)} };
+    _translateVecSpShip = { {_playerCtrl.x , _playerCtrl.y} };
 
     DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
 
+    // new disintegrated asteroids control as space objects
+    std::vector<spaceObject> _newAsteroidsCtrl;
+
+
+    //update Bullets
+    for (auto& b : _bulletsCtrl)
+    {
+      b.x += b.dx * elapsedTicks * 3.0f;
+      b.y += b.dy * elapsedTicks * 3.0f;
+      b.x = WrapX(b.x);
+      b.y = WrapY(b.y);
+
+      Draw(b.x, b.y);
+
+      // check bullet collision/hit with Asteroid
+      for (auto& a : _asteroidsCtrl)
+      {
+        if (isInsideCircle(a.x, a.y, a.size, b.x, b.y))
+        {
+          // Asteroid is hit
+          if (a.size > 4)
+          {
+            // Disintegrate to two
+            float angle1 = ((float)std::rand() / (float)RAND_MAX )* nd::defaults::radian2Pi;
+            float angle2 = ((float)std::rand() / (float)RAND_MAX) * nd::defaults::radian2Pi;
+            
+            _newAsteroidsCtrl.push_back({a.x, a.y, 10.0f * sinf(angle1), 10.0f * cosf(angle1), a.size >>1, 0.0f});
+            _newAsteroidsCtrl.push_back({ a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle1), a.size >> 1, 0.0f });
+          }
+
+          // remove bullet too. Forcefully out of screen.
+          b.x = -1000;
+        }
+      }
+    }
 
     // Remove off screen bullets instead of wrapping
     if (!_bulletsCtrl.empty())
@@ -94,16 +134,7 @@ protected:
       if (i != _bulletsCtrl.end())
         _bulletsCtrl.erase(i);
     }
-
-    //update Bullets
-    for (auto& b : _bulletsCtrl)
-    {
-      b.x += b.dx * elapsedTicks * 3.0f;
-      b.y += b.dy * elapsedTicks * 3.0f;
-
-      Draw(b.x, b.y);
-    }
-
+    
 
   }
 

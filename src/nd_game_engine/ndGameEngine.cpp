@@ -1,6 +1,7 @@
 
 #include <cstddef>
 #include <thread>
+#include<cmath>
 
 #include "ndGameEngine.h"
 #include "ndUtils.h"
@@ -133,6 +134,16 @@ int32_t NdGameEngine::GetDrawTargetHeight()
     return _drawTarget->Height();
   else
     return 0;
+}
+
+bool NdGameEngine::isInsideCircle(float cx, float cy, float radius, float x, float y) const
+{
+  return std::sqrtf( std::powf((x - cx),2.0f) + std::powf((y - cy),2.0f) ) < radius;
+}
+
+void NdGameEngine::OnQuitCb() const
+{
+  g_isEngineRunning = false;
 }
 
 
@@ -287,6 +298,8 @@ void NdGameEngine::EngineInit()
 {
 
   _mediaLib.CreateWindow(_screenWidth, _screenHeight, _pixelWidth, _pixelHeight, _fullScreen);
+
+  _mediaLib.ConnectQuitCb(std::bind(&NdGameEngine::OnQuitCb, this));
 
   _tp1 = system_clock::now();
   _tp2 = system_clock::now();

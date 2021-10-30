@@ -120,7 +120,10 @@ while (running)
 
       case SDL_QUIT:
       {
-        //running = false;
+        if (_onQuitCb)
+          _onQuitCb();
+
+        SDL_Quit();
         break;
       }
       }
@@ -131,6 +134,11 @@ while (running)
 }
 #endif
 
+}
+
+void MediaLibrarySDL::ConnectQuitCb(MediaClientFunc_t clientCbk)
+{
+  _onQuitCb = clientCbk;
 }
 
 

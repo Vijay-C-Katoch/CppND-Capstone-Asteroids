@@ -41,6 +41,10 @@ public:
 
     void PollEvent();
 
+    // Media Client callbacks
+    using MediaClientFunc_t = std::function<void(void)>;
+    void ConnectQuitCb(MediaClientFunc_t clientCbk);
+
 private:
     SDL_Window* _window = NULL;
     SDL_Surface* _screenSurface = NULL;
@@ -60,6 +64,9 @@ private:
 
     // handle input and events
     SDL_Event _sdlEvent;
+
+    // client callbacks
+    MediaClientFunc_t _onQuitCb;
 
     void MapSDLKeys();
 

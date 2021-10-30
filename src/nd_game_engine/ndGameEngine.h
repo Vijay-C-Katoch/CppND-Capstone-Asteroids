@@ -36,6 +36,7 @@ namespace nd
   {
     constexpr std::uint8_t   alpha = 0xFF; //opacity. 255 = opaque
     constexpr std::uint32_t  pixelValue = (alpha <<24);
+    constexpr float radian2Pi = 6.283185f;
   }
    
 
@@ -128,6 +129,8 @@ namespace nd
       _mediaLib.ConnectKeyReleaseCb(key, func);
     }
 
+    void OnQuitCb()const;
+
   public: // Utility
       std::int32_t GetDrawTargetWidth();
 
@@ -157,6 +160,8 @@ namespace nd
       {
         return _elapsedTicks;
       }
+
+      bool isInsideCircle(float cx, float cy, float radius, float x, float y) const;
 
   public: // Draw methods
       void SetDrawTarget(std::unique_ptr<Sprite> target);
