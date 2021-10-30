@@ -3,14 +3,12 @@
 
 #include "ndGameEngine.h"
 
-#include <iostream>
-
 class AsteroidGame : public nd::NdGameEngine
 {
 public:
   AsteroidGame() = default;
 
-  void Draw(std::int32_t x, std::int32_t y, nd::Pixel p) override
+  void Draw(std::int32_t x, std::int32_t y, nd::Pixel p = nd::WHITE) override
   {
     x = WrapX(x);
     y = WrapY(y);
@@ -33,11 +31,13 @@ protected:
     _translateVecSpShip = { {1.0f, 1.0f} };
 
 
-    // Model Asteroids as Polygon made up of 2D vectors
-    int verts = 20;
+    /* Model Asteroids as Polygon made up of 2D vectors.
+    *  Number of (verts) small line segments at angle make closed polygon
+    * */
+    int verts = 50;
     for (int i = 0; i < verts; i++)
     {
-      float radius = 50.0f;
+      float radius = 1.0f;
       float a = ((float)i / (float)verts) * 6.28318f;
       _vecModelAsteroids.push_back({ { radius * sinf(a), radius * cosf(a)} });
     }
@@ -48,9 +48,13 @@ protected:
     // Connect keyboard keys to functions
     ConnectKeyPressCb(nd::Key::UP, std::bind(&AsteroidGame::OnUpKeyPress, this));
     ConnectKeyPressCb(nd::Key::DOWN, std::bind(&AsteroidGame::OnDownKeyPress, this));
-    // steer the space ship
+    // steer the space-ship
     ConnectKeyPressCb(nd::Key::LEFT, [&]() { _playerCtrl.angle -= 5.0f * ElapsedTicks();});
     ConnectKeyPressCb(nd::Key::RIGHT, [&](){ _playerCtrl.angle += 5.0f * ElapsedTicks();});
+    // Fire bullet on space key release
+    ConnectKeyReleaseCb(nd::Key::SPACE, [&](){
+      _bulletsCtrl.push_back({ _playerCtrl.x, _playerCtrl.y, sinf(_playerCtrl.angle) * 50.0f, -cosf(_playerCtrl.angle) * 50.0f , 0, 0.0f });
+    });
 }
 
   void onClientUpdate(float elapsedTicks) override
@@ -66,7 +70,7 @@ protected:
 
       _translateVecAsteroid = { {WrapX(a.x) , WrapY(a.y)} };
 
-      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle);                   
+      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle, a.size);                   
     }
 
     // Player control change ship position wrt velocity
@@ -77,6 +81,19 @@ protected:
     _translateVecSpShip = { {WrapX(_playerCtrl.x) , WrapY(_playerCtrl.y)} };
 
     DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
+
+    //update and draw asteroids
+    for (auto& b : _bulletsCtrl)
+    {
+      // Formula: newPosition = velosity*time + old position;
+      b.x += b.dx * elapsedTicks;
+      b.y += b.dy * elapsedTicks;
+
+      _translateVecAsteroid = { {WrapX(b.x) , WrapY(b.y)} };
+
+      Draw(b.x, b.y);
+    }
+
   }
 
 public:   //Hardware connect
@@ -108,6 +125,7 @@ private:
     float angle;  // angle in radians
   };
 
+ 
   // Model space-ship as Triangle made up of 2D vectors
   std::vector<nd::ndVector<float>> _vecModelShip;
   // Model Asteroids as Polygon made up of 2D vectors
@@ -117,6 +135,8 @@ private:
   spaceObject _playerCtrl;
   // asteroids control as space objects
   std::vector<spaceObject> _asteroidsCtrl;
+  // controlling bullets as space objects
+  std::vector<spaceObject> _bulletsCtrl;
   
   // Translation vectors 
   nd::ndVector<float> _translateVecSpShip;

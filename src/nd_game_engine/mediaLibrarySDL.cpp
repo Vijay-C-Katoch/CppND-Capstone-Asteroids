@@ -140,8 +140,8 @@ void MediaLibrarySDL::MapSDLKeys()
   _sdlKeys[Key::DOWN] = SDL_SCANCODE_DOWN;
   _sdlKeys[Key::LEFT] = SDL_SCANCODE_LEFT;
   _sdlKeys[Key::RIGHT] = SDL_SCANCODE_RIGHT;
-  _sdlKeys[Key::SPACE] = SDL_SCANCODE_KP_SPACE;
-  _sdlKeys[Key::TAB] = SDL_SCANCODE_KP_TAB;
+  _sdlKeys[Key::SPACE] = SDL_SCANCODE_SPACE;
+  _sdlKeys[Key::TAB] = SDL_SCANCODE_TAB;
   _sdlKeys[Key::LSHIFT] = SDL_SCANCODE_LSHIFT;
   _sdlKeys[Key::RSHIFT] = SDL_SCANCODE_RSHIFT;
   _sdlKeys[Key::LCTRL] = SDL_SCANCODE_LCTRL;
