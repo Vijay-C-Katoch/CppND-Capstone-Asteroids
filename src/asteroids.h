@@ -29,12 +29,14 @@ protected:
     /* Model Asteroids as Polygon made up of 2D vectors.
     *  Number of (verts) small line segments at angle make closed polygon
     * */
-    int verts = 50;
+    int verts = 25;
     for (int i = 0; i < verts; i++)
     {
-      float radius = 1.0f;
+      // Polygon with line segments at maximum radius of 1.2 from centre
+      float randRadius = 0.8f + ( (float)std::rand() / (float)RAND_MAX ) * 0.4f ;
+
       float a = ((float)i / (float)verts) * nd::defaults::radian2Pi;
-      _vecModelAsteroids.push_back({ { radius * sinf(a), radius * cosf(a)} });
+      _vecModelAsteroids.push_back({ { randRadius * sinf(a), randRadius * cosf(a)} });
     }
 
     /***********************************************
@@ -85,7 +87,7 @@ protected:
 
       _translateVecAsteroid = { {a.x , a.y} };
 
-      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle, a.size);
+      DrawWireFrame(_vecModelAsteroids, _translateVecAsteroid, a.angle, a.size, nd::LIGHT_GREEN);
     }
 
     // Player control change ship position wrt velocity
@@ -141,8 +143,8 @@ protected:
       _asteroidsCtrl.push_back(a);
 
     // Remove off screen asteroids hit by bullets and the bullets too
-    removeOffscreenObjects(_asteroidsCtrl);
-    removeOffscreenObjects(_bulletsCtrl);
+    removeOffscreenAsteroids(_asteroidsCtrl);
+    removeOffscreenBullets(_bulletsCtrl);
 
     if (_asteroidsCtrl.empty()) // If no asteroids on screen, level completed
     {
@@ -256,15 +258,27 @@ private:
      isPlayerHit = false;
    }
 
-  void removeOffscreenObjects(std::vector<SpaceObject>& objectCtrl)
+  void removeOffscreenBullets(std::vector<SpaceObject>& b)
   {
-    if (!objectCtrl.empty())
+    if (!b.empty())
     {
-      auto i = remove_if(objectCtrl.begin(), objectCtrl.end(), [&](SpaceObject so) {
+      auto i = remove_if(b.begin(), b.end(), [&](SpaceObject so) {
         return (so.x < 1 || so.y < 1 || so.x >= ScreenWidth() - 1 || so.y >= ScreenHeight() - 1);
       });
-      if (i != objectCtrl.end())
-        objectCtrl.erase(i);
+      if (i != b.end())
+        b.erase(i);
+    }
+  }
+
+  void removeOffscreenAsteroids(std::vector<SpaceObject>& a)
+  {
+    if (!a.empty())
+    {
+      auto i = remove_if(a.begin(), a.end(), [&](SpaceObject so) {
+        return (so.x < 0);
+      });
+      if (i != a.end())
+        a.erase(i);
     }
   }
 

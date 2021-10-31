@@ -20,6 +20,7 @@
 #define ND_GAME_ENGINE_H_
 
 #include <cstdint>
+#include <cmath>
 #include <vector>
 #include <memory>
 #include <chrono>
@@ -64,7 +65,7 @@ namespace nd
     WHITE(255, 255, 255),
     BLACK(0, 0, 0), BLANK(0, 0, 0, 0),
     RED(255, 0, 0), DARK_RED(128, 0, 0), VERY_DARK_RED(64, 0, 0),
-    GREEN(0, 255, 0), DARK_GREEN(0, 128, 0), VERY_DARK_GREEN(0, 64, 0),
+    GREEN(0, 255, 0), LIGHT_GREEN(0, 180, 0), DARK_GREEN(0, 128, 0), VERY_DARK_GREEN(0, 64, 0),
     BLUE(0, 0, 255), DARK_BLUE(0, 0, 128), VERY_DARK_BLUE(0, 0, 64),
     GREY(192, 192, 192), DARK_GREY(128, 128, 128), VERY_DARK_GREY(64, 64, 64),
     YELLOW(255, 255, 0), DARK_YELLOW(128, 128, 0), VERY_DARK_YELLOW(64, 64, 0),
@@ -150,12 +151,12 @@ namespace nd
 
       float WrapX(float x)
       {
-        return std::fabsf((std::fmod((x + _screenWidth), _screenWidth)));
+        return std::abs((std::fmod((x + _screenWidth), _screenWidth)));
       }
 
       float WrapY(float y)
       {
-        return std::fabsf((std::fmod((y + _screenHeight), _screenHeight)));
+        return std::abs((std::fmod((y + _screenHeight), _screenHeight)));
       }
 
       float ElapsedTicks() const
@@ -169,7 +170,7 @@ namespace nd
       void SetDrawTarget(std::unique_ptr<Sprite> target);
       virtual void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
       void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
-      void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f);
+      void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f, Pixel p = WHITE);
     
       // Clears Screen by changing draw target to given Pixel
       void ClearScreen(Pixel p);
