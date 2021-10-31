@@ -45,7 +45,7 @@ protected:
     }
 
     // asteroids control as space objects is  random
-    _asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)160, 0.0f });
+    _asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)80, 0.0f });
     //_asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)16, 0.0f });
 
     // Connect keyboard keys to functions
@@ -85,12 +85,10 @@ protected:
     _playerCtrl.x = WrapX(_playerCtrl.x);
     _playerCtrl.y = WrapY(_playerCtrl.y);
 
-    _translateVecSpShip = { {_playerCtrl.x , _playerCtrl.y} };
-
-    DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    // rotate 45 deg or radian 0.7854
+    _translateVecSpShip = { {_playerCtrl.x , _playerCtrl.y} };    
 
     // new disintegrated asteroids control as space objects
-    std::vector<spaceObject> _newAsteroidsCtrl;
+    std::vector<SpaceObject> _newAsteroidsCtrl;
 
 
     //update Bullets
@@ -99,41 +97,62 @@ protected:
       b.x += b.dx * elapsedTicks * 3.0f;
       b.y += b.dy * elapsedTicks * 3.0f;
       b.x = WrapX(b.x);
-      b.y = WrapY(b.y);
-
-      Draw(b.x, b.y);
+      b.y = WrapY(b.y);      
 
       // check bullet collision/hit with Asteroid
       for (auto& a : _asteroidsCtrl)
       {
         if (isInsideCircle(a.x, a.y, a.size, b.x, b.y))
         {
-          // Asteroid is hit
-          if (a.size > 4)
+          // Asteroid is hit. Disintegrate if size is greater than minimum
+          if (a.size > 10)
           {
-            // Disintegrate to two
-            float angle1 = ((float)std::rand() / (float)RAND_MAX )* nd::defaults::radian2Pi;
-            float angle2 = ((float)std::rand() / (float)RAND_MAX) * nd::defaults::radian2Pi;
+            // Disintegrate to two, half size each, at same position, with random velocity
+            // calculate angle, which corresponds to acceleration in velocity calculation
+            float angle1 = ((float)std::rand() / (float)RAND_MAX )* nd::defaults::radianPi;
+            float angle2 = ((float)std::rand() / (float)RAND_MAX) * nd::defaults::radianPi;
             
+             // append to asteroid control, half size, at current position, with random acceleartion angle
             _newAsteroidsCtrl.push_back({a.x, a.y, 10.0f * sinf(angle1), 10.0f * cosf(angle1), a.size >>1, 0.0f});
             _newAsteroidsCtrl.push_back({ a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle1), a.size >> 1, 0.0f });
           }
 
-          // remove bullet too. Forcefully out of screen.
+          // remove astroids bullets on hit . Forcefully making them  offscreen.
+          a.x = -1000;
           b.x = -1000;
+          
         }
       }
     }
 
-    // Remove off screen bullets instead of wrapping
-    if (!_bulletsCtrl.empty())
+    // control new disintegrated asteroids by pushing to main astroid control
+    for (auto a : _newAsteroidsCtrl)
+      _asteroidsCtrl.push_back(a);
+
+    // Remove off screen asteroids hit by bullets and the bullets too
+    removeOffscreenObjects(_asteroidsCtrl);
+    removeOffscreenObjects(_bulletsCtrl);
+
+    if (_asteroidsCtrl.empty()) // If no asteroids on screen, level completed
     {
-      auto i = remove_if(_bulletsCtrl.begin(), _bulletsCtrl.end(), [&](spaceObject so) {
-        return (so.x < 1 || so.y < 1 || so.x >= ScreenWidth() - 1 || so.y >= ScreenHeight() - 1);
-      });
-      if (i != _bulletsCtrl.end())
-        _bulletsCtrl.erase(i);
+      _asteroidsCtrl.clear();
+      _bulletsCtrl.clear();
+
+      // Add two new asteroids on screen, add them at 90 degree left and
+      // right to space-ship current position      
+      addNewAsteroidOnScreen(- nd::defaults::radianPiby2);
+      addNewAsteroidOnScreen(+ nd::defaults::radianPiby2);
+
+      // update score on level Clear
+      //score += 1000; 
     }
+
+    // Draw Bullets
+    for (auto b : _bulletsCtrl)
+      Draw(b.x, b.y);
+
+    // Draw space ship
+    DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);
     
 
   }
@@ -154,10 +173,9 @@ public:   //Hardware connect
     _playerCtrl.dy -= -cos(_playerCtrl.angle) * ElapsedTicks() * 20.0f;
   }
 
-
 private:
 
-  struct spaceObject
+  struct SpaceObject
   {
     float x;      // location x component
     float y;      // location y component
@@ -174,15 +192,44 @@ private:
   std::vector<nd::ndVector<float>> _vecModelAsteroids;
 
   // player control of space-ship as space object
-  spaceObject _playerCtrl;
+  SpaceObject _playerCtrl;
   // asteroids control as space objects
-  std::vector<spaceObject> _asteroidsCtrl;
+  std::vector<SpaceObject> _asteroidsCtrl;
   // controlling bullets as space objects
-  std::vector<spaceObject> _bulletsCtrl;
+  std::vector<SpaceObject> _bulletsCtrl;
   
   // Translation vectors 
   nd::ndVector<float> _translateVecSpShip;
   nd::ndVector<float> _translateVecAsteroid;
+
+
+
+ private:
+
+  // utility function
+  void removeOffscreenObjects(std::vector<SpaceObject>& objectCtrl)
+  {
+    if (!objectCtrl.empty())
+    {
+      auto i = remove_if(objectCtrl.begin(), objectCtrl.end(), [&](SpaceObject so) {
+        return (so.x < 1 || so.y < 1 || so.x >= ScreenWidth() - 1 || so.y >= ScreenHeight() - 1);
+      });
+      if (i != objectCtrl.end())
+        objectCtrl.erase(i);
+    }
+  }
+
+  void addNewAsteroidOnScreen(float userAngle)
+  {
+    // Add new asteroids on screen at an angle to the existing player space ship location
+    // so as newly created astroid do not hit space ship. Create them at position offseted
+    // scaling factor times the user angle
+    constexpr float posScaling = 140.0f;
+
+    _asteroidsCtrl.push_back({ posScaling * sinf(_playerCtrl.angle + userAngle) + _playerCtrl.x,
+                        posScaling* cosf(_playerCtrl.angle + userAngle) + _playerCtrl.y,
+                        80.0f * sinf(_playerCtrl.angle), -60.0f * cosf(_playerCtrl.angle), (int)80, 0.0f });
+  }
 
 };
 

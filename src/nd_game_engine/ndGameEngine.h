@@ -37,6 +37,8 @@ namespace nd
     constexpr std::uint8_t   alpha = 0xFF; //opacity. 255 = opaque
     constexpr std::uint32_t  pixelValue = (alpha <<24);
     constexpr float radian2Pi = 6.283185f;
+    constexpr float radianPi = 3.141593f;
+    constexpr float radianPiby2 = 1.570796f;
   }
    
 
