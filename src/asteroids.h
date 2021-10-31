@@ -20,18 +20,11 @@ protected:
 
   void onClientCreate() override
   {
+    /*************************************
+    * 1. Create Game Models
+    *************************************/
     // Model space-ship as Triangle made up of 2D vectors
     _vecModelShip = { { 0.0f, -50.0f}, {-25.0f, +25.0f}, {+25.0f, +25.0f} };
-    //_vecModelShip = { { 0.0f, -5.0f}, {-2.5f, +2.5f}, {+2.5f, +2.5f} };
-    
-    // player control of spaceShip. Initialize for spaceship to be at centre
-    _playerCtrl.x = ScreenWidth() / 2.0f;
-    _playerCtrl.y = ScreenHeight() / 2.0f;
-    _playerCtrl.dx = 0.0f;
-    _playerCtrl.dy = 0.0f;
-    _playerCtrl.angle = 0.0f;     
-    _translateVecSpShip = { {1.0f, 1.0f} };
-
 
     /* Model Asteroids as Polygon made up of 2D vectors.
     *  Number of (verts) small line segments at angle make closed polygon
@@ -44,9 +37,18 @@ protected:
       _vecModelAsteroids.push_back({ { radius * sinf(a), radius * cosf(a)} });
     }
 
-    // asteroids control as space objects is  random
-    _asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)80, 0.0f });
-    //_asteroidsCtrl.push_back({ 200.0f, 200.0f, 80.0f, -60.0f, (int)16, 0.0f });
+    /***********************************************
+    * 2. Initialize and control Game Models
+    ************************************************/
+
+    // place player controlled space-ship at centre
+    InitShipControl();
+    // place game controlled asteroids on screen
+    InitAsteroidControl(200.0f, 200.0f, 80.0f, -60.0f, 80);
+
+    /*************************************
+    * 3. Hardware connection
+    *************************************/
 
     // Connect keyboard keys to functions
     ConnectKeyPressCb(nd::Key::UP, std::bind(&AsteroidGame::OnUpKeyPress, this));
@@ -63,6 +65,14 @@ protected:
   void onClientUpdate(float elapsedTicks) override
   {
     ClearScreen(nd::BLACK);
+
+    if (isPlayerHit)
+      ResetGame();
+
+    // Check if ship collided with asteroids
+    for (const auto& a : _asteroidsCtrl)
+      if (isInsideCircle(a.x, a.y, a.size, _playerCtrl.x, _playerCtrl.y))
+        isPlayerHit = true; 
     
     //update and draw asteroids
     for (auto& a : _asteroidsCtrl)
@@ -117,6 +127,7 @@ protected:
             _newAsteroidsCtrl.push_back({ a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle1), a.size >> 1, 0.0f });
           }
 
+          gameScore += 100;
           // remove astroids bullets on hit . Forcefully making them  offscreen.
           a.x = -1000;
           b.x = -1000;
@@ -143,8 +154,8 @@ protected:
       addNewAsteroidOnScreen(- nd::defaults::radianPiby2);
       addNewAsteroidOnScreen(+ nd::defaults::radianPiby2);
 
-      // update score on level Clear
-      //score += 1000; 
+      // give high score on level completion
+      gameScore += 1000;
     }
 
     // Draw Bullets
@@ -152,8 +163,7 @@ protected:
       Draw(b.x, b.y);
 
     // Draw space ship
-    DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);
-    
+    DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    
 
   }
 
@@ -197,6 +207,9 @@ private:
   std::vector<SpaceObject> _asteroidsCtrl;
   // controlling bullets as space objects
   std::vector<SpaceObject> _bulletsCtrl;
+  //
+  int gameScore = 0;
+  bool isPlayerHit = false;
   
   // Translation vectors 
   nd::ndVector<float> _translateVecSpShip;
@@ -206,7 +219,43 @@ private:
 
  private:
 
-  // utility function
+   // utility functions
+
+   void InitShipControl()
+   {
+     // player control of spaceShip. Initialize for spaceship to be at centre
+     _playerCtrl.x = ScreenWidth() / 2.0f;
+     _playerCtrl.y = ScreenHeight() / 2.0f;
+     _playerCtrl.dx = 0.0f;
+     _playerCtrl.dy = 0.0f;
+     _playerCtrl.angle = 0.0f;
+     _translateVecSpShip = { {1.0f, 1.0f} };
+   }
+
+   void InitAsteroidControl( float x , float y, float dx, float dy, int size)
+   {
+     // asteroids control as space objects is controlled by game not player
+     _asteroidsCtrl.push_back({ x, y, dx, dy, size, 0.0f });
+   }
+
+   void ResetGame()
+   {
+     // Reinitialize ship position
+     InitShipControl();
+
+     // clear space objects control
+     _bulletsCtrl.clear();
+     _asteroidsCtrl.clear();
+
+     // On Reset add two asteroids on screen. Make sure they don't hit
+     // ship on creation
+     addNewAsteroidOnScreen(-nd::defaults::radianPiby2);
+     addNewAsteroidOnScreen(+nd::defaults::radianPiby2);
+
+     gameScore = 0;
+     isPlayerHit = false;
+   }
+
   void removeOffscreenObjects(std::vector<SpaceObject>& objectCtrl)
   {
     if (!objectCtrl.empty())
