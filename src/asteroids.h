@@ -68,13 +68,13 @@ protected:
   {
     ClearScreen(nd::BLACK);
 
-    if (isPlayerHit)
+    if (_isPlayerHit)
       ResetGame();
 
     // Check if ship collided with asteroids
     for (const auto& a : _asteroidsCtrl)
       if (isInsideCircle(a.x, a.y, a.size, _playerCtrl.x, _playerCtrl.y))
-        isPlayerHit = true; 
+        _isPlayerHit = true; 
     
     //update and draw asteroids
     for (auto& a : _asteroidsCtrl)
@@ -129,7 +129,7 @@ protected:
             _newAsteroidsCtrl.push_back({ a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle1), a.size >> 1, 0.0f });
           }
 
-          gameScore += 100;
+          _gameScore += 100;
           // remove astroids bullets on hit . Forcefully making them  offscreen.
           a.x = -1000;
           b.x = -1000;
@@ -157,7 +157,7 @@ protected:
       addNewAsteroidOnScreen(+ nd::defaults::radianPiby2);
 
       // give high score on level completion
-      gameScore += 1000;
+      _gameScore += 1000;
     }
 
     // Draw Bullets
@@ -167,9 +167,8 @@ protected:
     // Draw space ship
     DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    
 
-    //
-    std::string temp = "ABCD";
-    DrawString(20, 50, temp, nd::YELLOW, 5);
+    // Update score
+    DrawString(2, 2, _scoreText + std::to_string(_gameScore), nd::YELLOW, 2);
 
   }
 
@@ -214,8 +213,9 @@ private:
   // controlling bullets as space objects
   std::vector<SpaceObject> _bulletsCtrl;
   //
-  int gameScore = 0;
-  bool isPlayerHit = false;
+  int _gameScore = 0;
+  bool _isPlayerHit = false;
+  std::string _scoreText = "SCORE : ";
   
   // Translation vectors 
   nd::ndVector<float> _translateVecSpShip;
@@ -258,8 +258,8 @@ private:
      addNewAsteroidOnScreen(-nd::defaults::radianPiby2);
      addNewAsteroidOnScreen(+nd::defaults::radianPiby2);
 
-     gameScore = 0;
-     isPlayerHit = false;
+     _gameScore = 0;
+     _isPlayerHit = false;
    }
 
   void removeOffscreenBullets(std::vector<SpaceObject>& b)

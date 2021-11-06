@@ -3,14 +3,13 @@
 
 int main() {
 
-    std::cout << "Hello World!" << "\n";    
+    std::cout << "Asteroid Game!" << "\n";    
 
     try
     {
         AsteroidGame game;
 
         game.ConstructGame(640, 480, 1, 1);
-        //game.ConstructGame(160, 100, 8, 8);
         // main run thread
         game.Run();
 
