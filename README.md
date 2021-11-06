@@ -11,7 +11,7 @@
   
 # ND Game Engine : NanoDegree Game Engine  
 
-## Create any 2D game using NND Game Engine
+## Create any 2D game using *ND Game Engine*
 
 Prerequisites
 --------------
