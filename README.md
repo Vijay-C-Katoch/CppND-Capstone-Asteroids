@@ -38,13 +38,17 @@ Windows
 ```
 rmdir /q /s build & cmake -G "Visual Studio 16 2019" -B.\build && cmake --build .\build && cmake --install .\build --config Debug
 ```
+* Run
+  * build\install\AsteroidsGame.exe
 
 Linux
 --------------
 `rm -rf build && cmake -Bbuild && cmake --build build`
 
 * Build or build and install in single step
-`rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build`
+```
+rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
+```
 
 
 # License
