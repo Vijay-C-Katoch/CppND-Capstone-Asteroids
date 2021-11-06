@@ -167,6 +167,10 @@ protected:
     // Draw space ship
     DrawWireFrame(_vecModelShip, _translateVecSpShip, _playerCtrl.angle);    
 
+    //
+    std::string temp = "ABCD";
+    DrawString(20, 50, temp, nd::YELLOW, 5);
+
   }
 
 public:   //Hardware connect

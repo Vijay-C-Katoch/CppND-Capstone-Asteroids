@@ -24,6 +24,7 @@
 #include <vector>
 #include <memory>
 #include <chrono>
+#include <string>
 
 #include "ndConfig.h"
 #include "ndException.h"
@@ -169,20 +170,26 @@ namespace nd
   public: // Draw methods
       void SetDrawTarget(std::unique_ptr<Sprite> target);
       virtual void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
-      void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE, std::uint32_t pattern = 0xFFFFFFFF);
+      void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE);
       void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f, Pixel p = WHITE);
+      void DrawString(int32_t x, int32_t y, const std::string& text, Pixel p = WHITE, uint32_t scale = 1);
     
       // Clears Screen by changing draw target to given Pixel
       void ClearScreen(Pixel p);
 
   public:
+    // initialization
+    void FontInit();
+
+  public:
       // Engine thread management
       void EngineInit();
-      void EngineCoreUpdate();       
+      void EngineCoreUpdate();   
 
 
   private:
       std::unique_ptr<Sprite> _drawTarget;
+      std::unique_ptr<Sprite> _fontTarget;
       Pixel::Tmode _pixelMode = Pixel::Tmode::NORMAL;
       float _pixelBlendFactor = 1.0f;
       std::uint32_t	_screenWidth = 256;
