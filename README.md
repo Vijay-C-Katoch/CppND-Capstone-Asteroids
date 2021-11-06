@@ -52,4 +52,4 @@ rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
 
 
 # License
-* https://github.com/Vijay-C-Katoch/CppND-Capstone-Asteroids/blob/main/LICENSE.md
+* https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/main/LICENSE.md
