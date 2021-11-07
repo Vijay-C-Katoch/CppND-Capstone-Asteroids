@@ -8,6 +8,7 @@ class AsteroidGame : public nd::NdGameEngine
 {
 public:
   AsteroidGame() = default;
+  ~AsteroidGame() = default;
 
   void Draw(std::int32_t x, std::int32_t y, nd::Pixel p = nd::WHITE) override
   {

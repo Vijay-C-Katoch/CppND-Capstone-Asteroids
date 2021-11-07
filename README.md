@@ -30,6 +30,7 @@ Prerequisites
 ## Build Instructions on platforms
 Windows 
 --------------
+* Default Game build is Asteroids Game. For Snake game provide option -DSNAKE
 
 `cmake -G "Visual Studio 16 2019" -B.\build`
 `cmake --build .\build`
@@ -41,13 +42,28 @@ rmdir /q /s build & cmake -G "Visual Studio 16 2019" -B.\build && cmake --build 
 * Run
   * build\install\AsteroidsGame.exe
 
+ 
+* Building Snake game in  single step 
+```
+rmdir /q /s build & cmake -G "Visual Studio 16 2019" -DSNAKE=ON -B.\build && cmake --build .\build && cmake --install .\build --config Debug
+```
+* Run
+  * build\install\SnakeGame.exe
+
 Linux
 --------------
+* Default Game build is Asteroids Game. For Snake game provide option -DSNAKE
+
 `rm -rf build && cmake -Bbuild && cmake --build build`
 
 * Build or build and install in single step
 ```
 rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
+```
+
+* Build or build and install Snake Game in single step
+```
+rm -rf build && cmake -DSNAKE=ON -Bbuild && cmake --build build && cmake --install build
 ```
 
 

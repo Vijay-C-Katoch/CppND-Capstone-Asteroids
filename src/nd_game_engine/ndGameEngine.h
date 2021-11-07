@@ -108,6 +108,7 @@ namespace nd
   {
   public:
     NdGameEngine() = default;
+    ~NdGameEngine() = default;
 
     void ConstructGame(
       std::int32_t screen_w, std::int32_t screen_h, std::int32_t pixel_w = 1, 

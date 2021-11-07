@@ -1,3 +1,7 @@
+
+#include "userGameConfig.h"
+
+#if ASTEROID_GAME
 #include <iostream>
 #include "asteroids.h"
 
@@ -37,3 +41,5 @@ int main() {
 
     return 0;
 }
+
+#endif
