@@ -151,14 +151,18 @@ namespace nd
         return _screenHeight;
       }
 
-      float WrapX(float x)
+      float WrapX(float x, std::uint32_t grid_width = 0)
       {
-        return std::abs((std::fmod((x + _screenWidth), _screenWidth)));
+        if (!grid_width) { grid_width = _screenWidth; }
+
+        return std::abs((std::fmod((x + grid_width), grid_width)));
       }
 
-      float WrapY(float y)
+      float WrapY(float y, std::uint32_t grid_height = 0)
       {
-        return std::abs((std::fmod((y + _screenHeight), _screenHeight)));
+        if (!grid_height) { grid_height = _screenHeight; }
+
+        return std::abs((std::fmod((y + grid_height), grid_height)));
       }
 
       float ElapsedTicks() const

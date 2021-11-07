@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <random>
 #include "ndGameEngine.h"
+#include "ndUtils.h"
 
 class SnakeGame : public nd::NdGameEngine
 {
@@ -69,12 +70,14 @@ protected:
     }
 
     // Check for food in front of Snake's head
-    if (_food.x == _head_x && _food.y == _head_y) {
+    if (static_cast<int>(_food.x) == static_cast<int>(_head_x) && 
+      static_cast<int>(_food.y) == static_cast<int>(_head_y)
+       ) {
       _score++;
       PlaceFood();
       // Grow snake and increase speed.
       GrowBody();
-      _speed += 0.02;
+      _speed += 0.0005;
     }
 
     RenderGame();
@@ -129,8 +132,8 @@ private:
     }
 
     // Wrap the Snake around to the beginning if going off of the screen.
-    _head_x = WrapX(_head_x);
-    _head_y = WrapY(_head_y);
+    _head_x = WrapX(_head_x, _grid_width);
+    _head_y = WrapY(_head_y, _grid_height);
   }
 
   void UpdateBody()
@@ -197,7 +200,7 @@ private:
     // Render food
     block.x = _food.x * block.w;
     block.y = _food.y * block.h;
-    DrawRectangle(block.x, block.y, block.w, block.h);
+    DrawRectangle(block.x, block.y, block.w, block.h, nd::RED);
 
     // Render Snake body
     for (GameCell const& point : body) {
