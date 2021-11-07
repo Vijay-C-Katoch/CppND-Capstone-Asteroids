@@ -49,13 +49,11 @@ protected:
   }
 
   void onClientUpdate(float elapsedTicks) override
-  {
-
-    ClearScreen(nd::BLACK);
-
+  {   
     if (!_alive) return;
 
-    _prev_cell.x = _head_x; // We first capture the head's cell before updating.
+    // We first capture the head's cell before updating.
+    _prev_cell.x = _head_x; 
     _prev_cell.y = _head_y;
 
     UpdateHead();
@@ -98,8 +96,8 @@ private:
 
   struct GameCell
   {
-    float x;      // location x component
-    float y;      // location y component
+    int32_t x;      // location x component
+    int32_t y;      // location y component
   };
 
   enum class SnakeDirection { kUp, kDown, kLeft, kRight };
@@ -197,6 +195,8 @@ private:
     block.w = ScreenWidth() / _grid_width;
     block.h = ScreenHeight() / _grid_height;
 
+    ClearScreen(nd::BLACK);
+
     // Render food
     block.x = _food.x * block.w;
     block.y = _food.y * block.h;
@@ -212,7 +212,7 @@ private:
     // Render snake's head
     block.x = static_cast<int32_t>(_head_x) * block.w;
     block.y = static_cast<int32_t>(_head_y) * block.h;
-    DrawRectangle(block.x, block.y, block.w, block.h);
+    DrawRectangle(block.x, block.y, block.w, block.h, nd::YELLOW);
   }
 
   int32_t _grid_width;
