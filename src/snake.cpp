@@ -11,7 +11,7 @@ int main() {
 
   try
   {
-    SnakeGame game;
+    SnakeGame game(32,32);
 
     game.ConstructGame(640, 480, 1, 1);
     // main run thread

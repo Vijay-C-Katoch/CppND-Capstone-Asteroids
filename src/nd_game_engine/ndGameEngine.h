@@ -172,8 +172,9 @@ namespace nd
       void SetDrawTarget(std::unique_ptr<Sprite> target);
       virtual void Draw(std::int32_t x, std::int32_t y, Pixel p = WHITE);
       void DrawLine(std::int32_t x1, std::int32_t y1, std::int32_t x2, std::int32_t y2, Pixel p = WHITE);
+      void DrawRectangle(std::int32_t x, std::int32_t y, std::int32_t w, std::int32_t h, Pixel p = WHITE);
       void DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r = 0.0f, float s = 1.0f, Pixel p = WHITE);
-      void DrawString(int32_t x, int32_t y, const std::string& text, Pixel p = WHITE, uint32_t scale = 1);
+      void DrawString(std::int32_t x, std::int32_t y, const std::string& text, Pixel p = WHITE, std::uint32_t scale = 1);
     
       // Clears Screen by changing draw target to given Pixel
       void ClearScreen(Pixel p);

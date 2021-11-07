@@ -8,12 +8,21 @@
 class SnakeGame : public nd::NdGameEngine
 {
 public:
-  SnakeGame() :
+  SnakeGame(int32_t grid_width, int32_t grid_height) :
+    _grid_width(grid_width),
+    _grid_height(grid_height),
     _randomEngine(_dev()),
-    _random_w(0, static_cast<int>(ScreenWidth() - 1)),
-    _random_h(0, static_cast<int>(ScreenHeight() - 1)) 
+    _random_w(0, static_cast<int>(grid_width - 1)),
+    _random_h(0, static_cast<int>(grid_height - 1))
   {
     PlaceFood();
+  }
+
+  void Draw(std::int32_t x, std::int32_t y, nd::Pixel p = nd::WHITE) override
+  {
+    x = WrapX(x);
+    y = WrapY(y);
+    nd::NdGameEngine::Draw(x, y, p);
   }
 
   ~SnakeGame() = default;
@@ -70,6 +79,29 @@ protected:
       _speed += 0.02;
     }
 
+    ///// Render on screen
+    Block block;
+    block.w = ScreenWidth() / _grid_width;
+    block.h = ScreenHeight() / _grid_height;
+
+    // Render food
+    block.x = _food.x * block.w;
+    block.y = _food.y * block.h;
+    DrawRectangle(block.x, block.y, block.w, block.h);
+
+    // Render Snake body
+    for (GameCell const& point : body) {
+      block.x = point.x * block.w;
+      block.y = point.y * block.h;
+      DrawRectangle(block.x, block.y, block.w, block.h);
+    }
+
+    // Render snake's head
+    block.x = static_cast<int32_t>(_head_x) * block.w;
+    block.y = static_cast<int32_t>(_head_y) * block.h;
+    DrawRectangle(block.x, block.y, block.w, block.h);
+
+
     // Update score
     DrawString(2, 2, _scoreText + std::to_string(_score), nd::YELLOW, 2);
 
@@ -77,6 +109,12 @@ protected:
 
 
 private:
+
+  struct Block
+  {
+    int32_t x, y;
+    int32_t w, h;
+  };
 
   struct GameCell
   {
@@ -138,6 +176,8 @@ private:
     }
   }
 
+  int32_t _grid_width;
+  int32_t _grid_height;
   float _speed{ 0.1f };
   int size{ 1 };
   bool _alive{ true };

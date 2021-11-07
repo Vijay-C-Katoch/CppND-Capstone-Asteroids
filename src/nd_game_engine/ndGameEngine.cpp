@@ -246,7 +246,14 @@ void NdGameEngine::DrawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2, Pixe
   }
 }
 
-//template<class T>
+void NdGameEngine::DrawRectangle(int32_t x, int32_t y, int32_t w, int32_t h, Pixel p)
+{
+  DrawLine(x, y, x + w, y, p);
+  DrawLine(x + w, y, x + w, y + h, p);
+  DrawLine(x + w, y + h, x, y + h, p);
+  DrawLine(x, y + h, x, y, p);
+}
+
 void NdGameEngine::DrawWireFrame(const std::vector<ndVector<float>>& model, const ndVector<float>& trlVec, float r, float s, Pixel p)
 {
 
