@@ -1,7 +1,7 @@
 
 #include <cstddef>
 #include <thread>
-#include<cmath>
+#include <cmath>
 
 #include "ndGameEngine.h"
 #include "ndUtils.h"
@@ -138,7 +138,7 @@ int32_t NdGameEngine::GetDrawTargetHeight()
 
 bool NdGameEngine::isInsideCircle(float cx, float cy, float radius, float x, float y) const
 {
-  return std::sqrtf( std::powf((x - cx),2.0f) + std::powf((y - cy),2.0f) ) < radius;
+  return sqrtf( powf((x - cx),2.0f) + powf((y - cy),2.0f) ) < radius;
 }
 
 void NdGameEngine::OnQuitCb() const
