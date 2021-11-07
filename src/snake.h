@@ -40,10 +40,10 @@ protected:
     * 3. Hardware connection
     *************************************/
     // Connect keyboard keys to functions
-    ConnectKeyPressCb(nd::Key::UP, [&]() {  _head_y -= _speed;});
-    ConnectKeyPressCb(nd::Key::DOWN, [&]() { _head_y += _speed;});
-    ConnectKeyPressCb(nd::Key::LEFT, [&]() { _head_x -= _speed;});
-    ConnectKeyPressCb(nd::Key::RIGHT, [&]() { _head_x += _speed;});
+    ConnectKeyPressCb(nd::Key::UP, [&]() { ChangeDirection(SnakeDirection::kUp, SnakeDirection::kDown); });
+    ConnectKeyPressCb(nd::Key::DOWN, [&]() { ChangeDirection(SnakeDirection::kDown, SnakeDirection::kUp); });
+    ConnectKeyPressCb(nd::Key::LEFT, [&]() { ChangeDirection(SnakeDirection::kLeft, SnakeDirection::kRight); });
+    ConnectKeyPressCb(nd::Key::RIGHT, [&]() { ChangeDirection(SnakeDirection::kRight, SnakeDirection::kLeft); });
 
   }
 
@@ -57,9 +57,7 @@ protected:
     _prev_cell.x = _head_x; // We first capture the head's cell before updating.
     _prev_cell.y = _head_y;
 
-    // Wrap the Snake around to the beginning if going off of the screen.
-    _head_x = WrapX(_head_x);
-    _head_y = WrapY(_head_y);
+    UpdateHead();
 
     _current_cell.x = _head_x; // Capture the head's cell after updating.
     _current_cell.y = _head_y;
@@ -79,28 +77,7 @@ protected:
       _speed += 0.02;
     }
 
-    ///// Render on screen
-    Block block;
-    block.w = ScreenWidth() / _grid_width;
-    block.h = ScreenHeight() / _grid_height;
-
-    // Render food
-    block.x = _food.x * block.w;
-    block.y = _food.y * block.h;
-    DrawRectangle(block.x, block.y, block.w, block.h);
-
-    // Render Snake body
-    for (GameCell const& point : body) {
-      block.x = point.x * block.w;
-      block.y = point.y * block.h;
-      DrawRectangle(block.x, block.y, block.w, block.h);
-    }
-
-    // Render snake's head
-    block.x = static_cast<int32_t>(_head_x) * block.w;
-    block.y = static_cast<int32_t>(_head_y) * block.h;
-    DrawRectangle(block.x, block.y, block.w, block.h);
-
+    RenderGame();
 
     // Update score
     DrawString(2, 2, _scoreText + std::to_string(_score), nd::YELLOW, 2);
@@ -121,6 +98,40 @@ private:
     float x;      // location x component
     float y;      // location y component
   };
+
+  enum class SnakeDirection { kUp, kDown, kLeft, kRight };
+
+  void ChangeDirection(SnakeDirection input, SnakeDirection opposite)
+  {
+    if (_direction != opposite || size == 1)
+      _direction = input;
+
+    return;
+  }
+
+  void UpdateHead() {
+    switch (_direction) {
+    case SnakeDirection::kUp:
+      _head_y -= _speed;
+      break;
+
+    case SnakeDirection::kDown:
+      _head_y += _speed;
+      break;
+
+    case SnakeDirection::kLeft:
+      _head_x -= _speed;
+      break;
+
+    case SnakeDirection::kRight:
+      _head_x += _speed;
+      break;
+    }
+
+    // Wrap the Snake around to the beginning if going off of the screen.
+    _head_x = WrapX(_head_x);
+    _head_y = WrapY(_head_y);
+  }
 
   void UpdateBody()
   {
@@ -176,9 +187,34 @@ private:
     }
   }
 
+  void RenderGame()
+  {
+    ///// Render on screen
+    Block block;
+    block.w = ScreenWidth() / _grid_width;
+    block.h = ScreenHeight() / _grid_height;
+
+    // Render food
+    block.x = _food.x * block.w;
+    block.y = _food.y * block.h;
+    DrawRectangle(block.x, block.y, block.w, block.h);
+
+    // Render Snake body
+    for (GameCell const& point : body) {
+      block.x = point.x * block.w;
+      block.y = point.y * block.h;
+      DrawRectangle(block.x, block.y, block.w, block.h);
+    }
+
+    // Render snake's head
+    block.x = static_cast<int32_t>(_head_x) * block.w;
+    block.y = static_cast<int32_t>(_head_y) * block.h;
+    DrawRectangle(block.x, block.y, block.w, block.h);
+  }
+
   int32_t _grid_width;
   int32_t _grid_height;
-  float _speed{ 0.1f };
+  float _speed{ 0.02f };
   int size{ 1 };
   bool _alive{ true };
   float _head_x;
@@ -187,16 +223,17 @@ private:
   int _score{ 0 };
   std::string _scoreText = "SCORE : ";
 
-  std::random_device _dev;
-  std::mt19937 _randomEngine;
-  std::uniform_int_distribution<int> _random_w;
-  std::uniform_int_distribution<int> _random_h;
+  SnakeDirection _direction = SnakeDirection::kUp;
 
   std::vector<GameCell> body;
   GameCell _prev_cell;
   GameCell _current_cell;
   GameCell _food;
-  
+
+  std::random_device _dev;
+  std::mt19937 _randomEngine;
+  std::uniform_int_distribution<int> _random_w;
+  std::uniform_int_distribution<int> _random_h;  
 
 };
 
