@@ -1,13 +1,4 @@
 # CPPND: Capstone project ND Game Engine
-
-## Rubric point addressed
-* Compiling and Testing
-* Loops, Functions, I/O
-* Object Oriented Programming
-* Memory Management
-  *
-* Concurrency
-  *
   
 # ND Game Engine : NanoDegree Game Engine  
 
@@ -67,5 +58,17 @@ rm -rf build && cmake -DSNAKE=ON -Bbuild && cmake --build build && cmake --insta
 ```
 
 
+## Rubric point addressed
+* Compiling and Testing
+* Loops, Functions, I/O
+* Object Oriented Programming
+* Memory Management
+  *
+* Concurrency
+  *
+  
+
 # License
 * https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/main/LICENSE.md
+
+
