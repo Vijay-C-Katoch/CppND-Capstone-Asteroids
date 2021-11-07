@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <cmath>
 #include <vector>
+#include <atomic>
 #include <memory>
 #include <chrono>
 #include <string>
