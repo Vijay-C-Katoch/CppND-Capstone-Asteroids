@@ -83,8 +83,8 @@ Example: 2D games built with NdGameEngine
 * [Compiling and Testing](https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine#basic-build-instructions)
 * [Loops, Functions, I/O](https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/ndGameEngine.cpp#L298)
 * [Object Oriented Programming](https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/mediaLibrary.h#L35)
-* Memory Management(https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/ndGameEngine.cpp#L84)
-* Concurrency(https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/ndGameEngine.cpp#L91)
+* [Memory Management](https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/ndGameEngine.cpp#L84)
+* [Concurrency](https://github.com/Vijay-C-Katoch/CppND-Capstone-NdGameEngine/blob/3eca6eb3d1d85c57251509614eb2a4bf04ca11c2/src/nd_game_engine/ndGameEngine.cpp#L91)
   
 
 # License
