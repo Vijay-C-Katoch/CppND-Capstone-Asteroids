@@ -20,6 +20,17 @@ Prerequisites
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. 
 
 
+## Basic Build Instructions
+
+1. Clone this repo.
+2. Make a build directory in the top level directory: `mkdir build && cd build`
+3. For Default Asteroids Game
+   3.1 Compile: `cmake .. && make`
+   3.2 Run it: `./AsteroidsGame`.
+4. For Snake Game
+   4.1 Compile: `cmake -DSNAKE=ON .. && make`
+   4.2 Run it: `./SnakeGame`.
+
 ## Build Instructions on platforms
 Windows 
 --------------
