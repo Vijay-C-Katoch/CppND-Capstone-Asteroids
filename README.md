@@ -70,9 +70,12 @@ rm -rf build && cmake -Bbuild && cmake --build build && cmake --install build
 rm -rf build && cmake -DSNAKE=ON -Bbuild && cmake --build build && cmake --install build
 ```
 
-Example 2D games built with NdGameEngine
+Example: 2D games built with NdGameEngine
 ------------------------------------------
-<img src="doc/Asteroids_v.gif"/>   <img src="doc/Snakes_v.gif"/>
+
+<img src="doc/Asteroids_v.gif"/>   
+
+<img src="doc/Snakes_v.gif"/>
 
 
 ## Rubric point addressed
